@@ -43,6 +43,11 @@ public:
         return this->username == username && this->password == password;
     }
 
+    bool deleteAccount(vector<AbstractUser*> *users){
+        
+    }
+
+
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
@@ -85,6 +90,7 @@ public:
                                     UserType::ADMIN)
         );
     }
+
 };
 
 int main(){
@@ -171,4 +177,3 @@ int main(){
     return 0;
 
 }
-
