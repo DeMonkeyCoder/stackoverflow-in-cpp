@@ -17,7 +17,7 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+//class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -44,14 +44,20 @@ public:
     }
 
     bool deleteAccount(vector<AbstractUser*> *users){
-        
+        for (auto user = users->beign(); user != this; user++) {
+            if ((*user) == this) {
+                return users.erase(user)
+            }
+        }
     }
 
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
-        for(auto user = users->begin(); user != users->end(); user++){
-            if((*user)->authenticate(username, password)){
-                return (User*) *user;
+        if (users.size != 0) {
+            for(auto user = users->begin(); user != users->end(); user++){
+                if((*user)->authenticate(username, password)){
+                    return (User*) *user;
+                }
             }
         }
         return nullptr;
@@ -60,12 +66,12 @@ public:
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
-                throw ex;
-            }
-        }
+//        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+//            if ((*user)->username == username) {
+//                UserAlreadyExistsException ex;
+//                throw ex;
+//            }
+//        }
 
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
@@ -87,9 +93,9 @@ public:
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
                                     "admin" /* password is unsafe! for test only */,
-                                    UserType::ADMIN)
-        );
+                                    UserType::ADMIN));
     }
+    
 
 };
 
@@ -128,11 +134,12 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        try{
-                            User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
-                        }
+                        User::signup(&appDatabase.appUsers, username, password); // delete this line
+//                        try{
+//                            User::signup(&appDatabase.appUsers, username, password);
+//                        } catch (UserAlreadyExistsException e) {
+//                            cout << "Error: username already exists";
+//                        }
                         break;
                     }
                     case 'e': {
