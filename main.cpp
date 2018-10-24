@@ -2,7 +2,6 @@
 #include <vector>
 using namespace std;
 
-// Seyed Arman Vaziri Bozorg
 
 /**
  * In the name of God
