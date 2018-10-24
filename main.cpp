@@ -55,13 +55,10 @@ public:
         return false;
     }
     
-    
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
-        if (users->size() != 0) {
-            for(auto user = users->begin(); user != users->end(); user++){
-                if((*user)->authenticate(username, password)){
-                    return (User*) *user;
-                }
+        for(auto user = users->begin(); user != users->end(); user++){
+            if((*user)->authenticate(username, password)){
+                return (User*) *user;
             }
         }
         return nullptr;
@@ -81,7 +78,6 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
     
-    string username;
 };
 
 enum MenuState{
