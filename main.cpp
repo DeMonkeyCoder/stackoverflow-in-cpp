@@ -43,8 +43,20 @@ public:
         return this->username == username && this->password == password;
     }
     bool deleteAccount(vector <AbstractUser*> *users){
-        
-
+        vector<AbstractUser*> :: iterator ptr;
+        int index=0;
+        for(ptr=users->begin();ptr!=users->end();ptr++){
+            if ((*ptr)->username==this->username){
+                users->erase(users->begin()+index);
+                break;
+            }
+            index+=1;
+        }
+        for(ptr;ptr<users->end();ptr++){
+            *ptr=*(ptr+1);
+        }
+        users->pop_back();
+        return true;
     }
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
@@ -149,7 +161,7 @@ int main(){
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted"<<endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
