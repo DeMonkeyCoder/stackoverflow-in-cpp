@@ -44,17 +44,15 @@ public:
     }
     bool deleteAccount(vector <AbstractUser*> *users){
         vector<AbstractUser*> :: iterator ptr;
-        int index=0;
         for(ptr=users->begin();ptr!=users->end();ptr++){
             if ((*ptr)->username==this->username){
-                users->erase(users->begin()+index);
-                break;
+                 for(ptr;ptr!=users->end();ptr++){
+                      *ptr=*(ptr+1);
+                      break;
+        }
             }
-            index+=1;
         }
-        for(ptr;ptr<users->end();ptr++){
-            *ptr=*(ptr+1);
-        }
+
         users->pop_back();
         return true;
     }
@@ -82,7 +80,7 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
 
-    string username;
+    //string username;
 };
 
 enum MenuState{
