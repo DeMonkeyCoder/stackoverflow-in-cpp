@@ -26,7 +26,7 @@ class UserAlreadyExistsException{
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!(done)
+    virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!(done)
     string username;
 protected:
     string password;
@@ -46,7 +46,7 @@ public:
     bool authenticate(string username, string password){
         return this->username == username && this->password == password;
     }
-    bool deleteAccount(vector <AbstractUser*> *users){
+    void deleteAccount(vector <AbstractUser*> *users){
         vector<AbstractUser*> :: iterator ptr;
         for(ptr=users->begin();ptr!=users->end();ptr++){
             if ((*ptr)->username==this->username){
@@ -58,7 +58,7 @@ public:
         }
 
         users->pop_back();
-        return true;
+
     }
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions(done)
