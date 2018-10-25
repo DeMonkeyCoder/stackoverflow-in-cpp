@@ -17,7 +17,12 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException: public std::runtime_error {
+    MyException(std::string const& message)
+    : std::runtime_error(message + " Was thrown")
+    {}
+
+}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -55,16 +60,30 @@ public:
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix user!!
             if ((*user)->username == username) {
                 UserAlreadyExistsException ex;
                 throw ex;
             }
         }
 
-        //Create user and add it to vector
+        //Create user and add user to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
+    bool deleteAccount(vector<AbstractUser*> *users){
+
+               auto user = users.begin();
+               int i=0;
+               while (user != users.end()){
+                   if(users->at(i)->username==this->username) {
+                       user = users->erase(user);
+                   }else{
+                       ++user;
+                       i++;
+                   }
+               }
+    }
+
 
     string username;
 };
