@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <exception>
 using namespace std;
 
 /**
@@ -17,7 +18,16 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserException: public exception {
+    const char * _errMsg;
+    UserException() {};
+    const char * what() const throw(){
+        return _errMsg;
+    }
+
+public:
+    UserException (const char * s)throw():_errMsg(s){};
+}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -57,13 +67,23 @@ public:
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+                UserException ex("User Already Exists");
                 throw ex;
             }
         }
 
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
+    }
+
+    bool deleteAccount(vector<AbstractUser *> *users){
+        auto it =users->begin();
+        for (auto user:*users) {
+            if (user->username == this->username) {
+                users->erase(it);
+            }
+            it++;
+        }
     }
 
     string username;
