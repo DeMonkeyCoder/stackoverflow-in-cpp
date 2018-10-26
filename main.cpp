@@ -54,13 +54,14 @@ public:
     }
     void deleteAccount(vector<AbstractUser*> *users){
         for(auto it = users->begin(); it != users->end(); it++){
-          if (((User*)(*it))->username == this->username){
+          if (((User*)(*it))->username == this->username){ // we cannot access to atributes of an abstract class so,
+                                                          // we have to cast AbstractUser* to User* !
               users->erase(it);
           }
         }
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions (completed!)
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
@@ -75,7 +76,7 @@ public:
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) {
-            if (((User*)(*user))->username == username) {
+            if (((User*)(*user))->username == username) {  // cast AbstractUser* to User* to fix the problem!
                 Exception ex("Username Already Exists");
                 throw ex;
             }
