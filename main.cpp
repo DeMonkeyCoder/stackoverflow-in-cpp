@@ -16,7 +16,6 @@ enum UserType{
     MEMBER
 };
 
-
 class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
@@ -29,30 +28,29 @@ protected:
     UserType type;
 };
 
-
 class User : public AbstractUser{
 public:
-
+    
     User(string username, string password, UserType type){
         this->username = username;
         this->password = password;
         this->type = type;
     }
-
+    
     bool authenticate(string username, string password){
         return this->username == username && this->password == password;
     }
-
+    
     void deleteAccount(vector<AbstractUser*> *users){
-        if (users->size() != 0) {
-            for (auto user = users->begin(); user != users->end(); user++) {
-                if ((*user) == this) {
-                    users->erase(user);
-                }
+        int dltAcc=1;
+        for (auto user = users->begin(); dltAcc; user++) {
+            if ((*user) == this) {
+                users->erase(user);
+                dltAcc = 0;
             }
         }
     }
-
+    
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
@@ -61,9 +59,9 @@ public:
         }
         return nullptr;
     }
-
+    
     static void signup(vector<AbstractUser*> *users, string username, string password){
-
+        
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) {
             if ((*user)->username == username) {
@@ -71,11 +69,10 @@ public:
                 throw ex;
             }
         }
-
+        
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
-
 };
 
 enum MenuState{
@@ -87,28 +84,25 @@ enum MenuState{
 class AppDatabase { //Just holds runtime data. doesn't save anything
 public:
     vector<AbstractUser *> appUsers;
-
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
                                     "admin" /* password is unsafe! for test only */,
                                     UserType::ADMIN));
     }
-
-
+    
 };
 
 int main(){
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-
+    
     char choice;
     cout << "Welcome!" << endl;
-
+    
     while(menuState != MenuState::END){
         switch (menuState){
             case MenuState::START: {
-
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
@@ -177,7 +171,6 @@ int main(){
             }
         }
     }
-
     return 0;
-
+    
 }
