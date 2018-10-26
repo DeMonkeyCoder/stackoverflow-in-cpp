@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+
 /**
  * In the name of God
  * Homework 2
@@ -17,13 +18,22 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class Exception{
+private:
+  string msg;
+public:
+  Exception(const string msg):msg(msg){}
+  ~Exception(){}
+  string getmasg() const {return msg;}
+
+};
 
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
+
 protected:
     string password;
     UserType type;
@@ -42,6 +52,13 @@ public:
     bool authenticate(string username, string password){
         return this->username == username && this->password == password;
     }
+    void deleteAccount(vector<AbstractUser*> *users){
+        for(auto it = users->begin(); it != users->end(); it++){
+          if (((User*)(*it))->username == this->username){
+              users->erase(it);
+          }
+        }
+    }
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
@@ -49,15 +66,17 @@ public:
                 return (User*) *user;
             }
         }
+        Exception ex("Incorect Username or Password");
+        throw ex;
         return nullptr;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+        for(auto user = users->begin(); user != users->end(); user++) {
+            if (((User*)(*user))->username == username) {
+                Exception ex("Username Already Exists");
                 throw ex;
             }
         }
@@ -108,12 +127,15 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
+
+                        try{
+                          loggedInUser = User::login(&appDatabase.appUsers, username, password);
                         }
+                        catch(Exception e){
+                          cout << e.getmasg() << '\n';
+                          break;
+                        }
+                        menuState = MenuState::LOGGED_IN;
                         break;
                     }
                     case '2': {
@@ -124,8 +146,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                        } catch (Exception e) {
+                            cout << e.getmasg() << endl;
                         }
                         break;
                     }
@@ -140,7 +162,8 @@ int main(){
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d.delete account\nl. logout\ne. exit\n";
+                cout << "You Have Logged In !" << '\n';
+                cout << "d.Delete account\nl. Logout\ne. Exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
@@ -171,4 +194,3 @@ int main(){
     return 0;
 
 }
-
