@@ -29,6 +29,8 @@ public:
     virtual bool authenticate(string username, string password) = 0;
     virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
+
+    virtual string usernames()=0;
 protected:
     string password;
     UserType type;
@@ -47,6 +49,9 @@ public:
     bool authenticate(string username, string password){
         return this->username == username && this->password == password;
     }
+    string usernames(){
+        return this->username;
+    }
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
@@ -54,7 +59,7 @@ public:
                 return (User*) *user;
             }
         }
-        UserAlreadyExistsException ex("Username or password is incorrect");
+        UserAlreadyExistsException ex("Error: Username or password is incorrect");
         throw ex;
     }
 
@@ -62,8 +67,8 @@ public:
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix user!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex("This user already exist");
+            if (!( (*user)->usernames()).compare(username)) {
+                UserAlreadyExistsException ex("Error: username already exists");
                 throw ex;
             }
         }
@@ -76,7 +81,7 @@ public:
                auto user = (*users).begin();
                int i=0;
                while (user != (*users).end()){
-                   if(users->at(i)->username==this->username) {
+                   if(users->at(i)->usernames()==this->username) {
                        user = users->erase(user);
                    }else{
                        ++user;
@@ -134,13 +139,6 @@ int main(){
                         } catch (UserAlreadyExistsException e) {
                             cout << e.what()<<endl;
                         }
-                        /*
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
-                        }
-                         */
                         break;
                     }
                     case '2': {
@@ -152,7 +150,7 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.what() <<endl;
                         }
                         break;
                     }
@@ -172,7 +170,7 @@ int main(){
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted" << endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
