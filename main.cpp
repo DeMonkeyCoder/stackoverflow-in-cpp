@@ -16,7 +16,9 @@ enum UserType{
     MEMBER
 };
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException{
+    
+};
 
 class AbstractUser{ // User structure
 public:
@@ -42,11 +44,11 @@ public:
     }
     
     void deleteAccount(vector<AbstractUser*> *users){
-        int dltAcc=1;
-        for (auto user = users->begin(); dltAcc; user++) {
+        int dltAcc=0;
+        for (auto user = users->begin(); !dltAcc; user++) {
             if ((*user) == this) {
                 users->erase(user);
-                dltAcc = 0;
+                dltAcc = 1;
             }
         }
     }
@@ -77,7 +79,6 @@ public:
                 throw ex;
             }
         }
-        
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
@@ -135,14 +136,14 @@ int main(){
                     }
                     case '2': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter Username :" << endl;
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter Password :" << endl;
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << "Error: username already exists!"<<endl;
                         }
                         break;
                     }
@@ -151,7 +152,7 @@ int main(){
                         break;
                     }
                     default: {
-                        cout << "Unknown Input" << endl;
+                        cout << "Unknown Input!" << endl;
                     }
                 }
                 break;
@@ -187,4 +188,3 @@ int main(){
     return 0;
     
 }
-
