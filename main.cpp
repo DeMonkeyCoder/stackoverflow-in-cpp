@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 using namespace std;
 
 /**
@@ -18,9 +19,8 @@ enum UserType{
 
 
 class UserAlreadyExistsException: public std::runtime_error {
-    MyException(std::string const& message)
-    : std::runtime_error(message + " Was thrown")
-    {}
+public:
+    explicit UserAlreadyExistsException(std::string const& message) : std::runtime_error(message + "\ntry again") {};
 
 }; //TODO: Give exceptions a better structure. search google (optional)
 
@@ -54,7 +54,8 @@ public:
                 return (User*) *user;
             }
         }
-        return nullptr;
+        UserAlreadyExistsException ex("Username or password is incorrect");
+        throw ex;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
@@ -62,7 +63,7 @@ public:
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix user!!
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+                UserAlreadyExistsException ex("This user already exist");
                 throw ex;
             }
         }
@@ -72,9 +73,9 @@ public:
     }
     bool deleteAccount(vector<AbstractUser*> *users){
 
-               auto user = users.begin();
+               auto user = (*users).begin();
                int i=0;
-               while (user != users.end()){
+               while (user != (*users).end()){
                    if(users->at(i)->username==this->username) {
                        user = users->erase(user);
                    }else{
@@ -123,23 +124,30 @@ int main(){
                 switch(choice) {
                     case '1': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter Username: ";
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter Password: ";
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                            menuState = MenuState::LOGGED_IN;
+                        } catch (UserAlreadyExistsException e) {
+                            cout << e.what()<<endl;
+                        }
+                        /*
                         if (loggedInUser == nullptr) {
                             cout << "couldn't login with given credentials.";
                         } else {
                             menuState = MenuState::LOGGED_IN;
                         }
+                         */
                         break;
                     }
                     case '2': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter Username: ";
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter Password: ";
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
