@@ -52,12 +52,20 @@ public:
     }
     
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+        int usrname=0;
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
             }
+            if ((*user)->username == username) {
+                usrname = 1;
+            }
         }
-        return nullptr;
+        if (usrname) {
+            throw 2;
+        } else {
+            throw 1;
+        }
     }
     
     static void signup(vector<AbstractUser*> *users, string username, string password){
@@ -112,11 +120,16 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.\n";
-                        } else {
+                        try {
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
                             menuState = MenuState::LOGGED_IN;
+                        } catch (int i) {
+                            if (i == 1) {
+                                cout<<"username not found!!!"<<endl;
+                                loggedInUser = nullptr;
+                            } else if (i == 2) {
+                                cout<<"password is not correct!!!"<<endl;
+                            }
                         }
                         break;
                     }
@@ -174,3 +187,4 @@ int main(){
     return 0;
     
 }
+
