@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <exception>
+#include <cstring>
 using namespace std;
 
 /**
@@ -33,6 +34,7 @@ public:
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
+    virtual string getUsername() const=0;
     virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
 protected:
@@ -43,11 +45,13 @@ protected:
 
 class User : public AbstractUser{
 public:
-
     User(string username, string password, UserType type){
         this->username = username;
         this->password = password;
         this->type = type;
+    }
+    string getUsername() const{
+        return  this->username;
     }
 
     bool authenticate(string username, string password){
@@ -68,8 +72,8 @@ public:
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
+        for(auto user :*users) { //TODO: 3. this doesn't work. fix it!!
+            if (strcmp(username.c_str(),user->getUsername().c_str()) == 0) {
                 UserException ex("User Already Exists");
                 throw ex;
             }
@@ -82,7 +86,7 @@ public:
     bool deleteAccount(vector<AbstractUser *> *users){
         auto it =users->begin();
         for (auto user:*users) {
-            if (user->username == this->username) {
+            if (user->getUsername() == this->username) {
                 users->erase(it);
             }
             it++;
