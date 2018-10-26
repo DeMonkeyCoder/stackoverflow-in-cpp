@@ -21,6 +21,7 @@ enum UserType{
 class UserException: public exception {
     const char * _errMsg;
     UserException() {};
+public:
     const char * what() const throw(){
         return _errMsg;
     }
@@ -59,6 +60,8 @@ public:
                 return (User*) *user;
             }
         }
+        UserException ex("Wrong Username or password");
+        throw ex;
         return nullptr;
     }
 
@@ -128,11 +131,11 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
+                        try {
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
                             menuState = MenuState::LOGGED_IN;
+                        }catch(UserException e) {
+                            cout << e.what()<< endl;
                         }
                         break;
                     }
@@ -144,8 +147,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                        } catch (UserException e) {
+                            cout << e.what() << endl;
                         }
                         break;
                     }
@@ -165,7 +168,7 @@ int main(){
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted"<< endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
