@@ -17,6 +17,13 @@ enum UserType
     MEMBER
 };
 
+class UserNotFoundException : public exception {
+    public:
+    const char * what() {
+        return  "couldn't login with given credentials.";
+    }
+};
+
 class UserAlreadyExistsException : public exception {
     public:
     const char * what() {
@@ -61,6 +68,8 @@ class User : public AbstractUser
                 return (User *)*user;
             }
         }
+        UserNotFoundException ex;
+        throw ex;
         return nullptr;
     }
 
@@ -76,7 +85,6 @@ class User : public AbstractUser
                 throw ex;
             }
         }
-
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
@@ -90,10 +98,11 @@ class User : public AbstractUser
                 return true;
             }
         }
+        
         return false;
 
     }
-    string username;
+    // string username;
 };
 
 enum MenuState
@@ -143,14 +152,11 @@ int main()
                 cin >> username;
                 cout << "Enter Password" << endl;
                 cin >> password;
-                loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                if (loggedInUser == nullptr)
-                {
-                    cout << "couldn't login with given credentials.";
-                }
-                else
-                {
+                try {
+                    loggedInUser = User::login(&appDatabase.appUsers, username, password);
                     menuState = MenuState::LOGGED_IN;
+                } catch (UserNotFoundException e) {
+                    cout << e.what() << endl;
                 }
                 break;
             }
