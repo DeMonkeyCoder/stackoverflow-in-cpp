@@ -17,9 +17,14 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{
-     const char * what () const throw (){
-        return "useralready exists!";
+class Userexception: public exception{
+    const char* message;
+public:
+    Userexception(const char* message){    
+        this->message=message;
+    } 
+    const char* what() const throw(){
+        return message;
     }
 }; //TODO: Give exceptions a better structure. search google (optional)(done)
 
@@ -67,7 +72,9 @@ public:
                 return (User*) *user;
             }
         }
-        throw "no user with this information";
+        const char* message="Error: No user with this information!";
+        Userexception ex(message); 
+        throw ex;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
@@ -75,7 +82,8 @@ public:
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+                const char* message="Error: User already exist!";
+                Userexception ex(message); 
                 throw ex;
             }
         }
@@ -127,12 +135,12 @@ int main(){
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{loggedInUser=User::login(&appDatabase.appUsers, username, password);}
-                        catch (const char* e){
-                              if (e=="no user with this information") {
-                                cout << "couldn't login with given credentials."<<endl;
+                        catch (Userexception& e){
+                                cout <<e.what()<<endl;
+                                break;
                             }
-                              break;
-                        }
+                              
+                        
                         menuState = MenuState::LOGGED_IN;
                         break ;
 
@@ -145,8 +153,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists"<<endl;
+                        } catch (Userexception& e) {
+                            cout << e.what() <<endl;
                         }
                         break;
                     }
