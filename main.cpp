@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -27,7 +28,14 @@ public:
 };
 
 class UserLoginException: public exception{
-    
+    const char* message;
+public:
+    UserLoginException(const char* message){
+        this->message = message;
+    };
+    const char* what() const throw(){
+        return message;
+    }
 };
 
 class AbstractUser{ // User structure
@@ -73,10 +81,14 @@ public:
                 usrname = 1;
             }
         }
-        if (usrname) {
-            throw "Error: username not found!";
-        } else {
-            throw "Error: password is not correct";
+        if (!usrname) {
+            throw UserLoginException("Error: username not found!");
+        }
+        else if(usrname) {
+            throw UserLoginException("Error: password is not correct");
+        }
+        else{
+            throw UserLoginException("Error: User not found!");
         }
     }
     
@@ -135,13 +147,8 @@ int main(){
                         try {
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
                             menuState = MenuState::LOGGED_IN;
-                        } catch (int i) {
-                            if (i == 1) {
-                                cout<<"username not found!!!"<<endl;
-                                loggedInUser = nullptr;
-                            } else if (i == 2) {
-                                cout<<"password is not correct!!!"<<endl;
-                            }
+                        } catch (UserLoginException& exp) {
+                            cout << exp.what() << endl;
                         }
                         break;
                     }
