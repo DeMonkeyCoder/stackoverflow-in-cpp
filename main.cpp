@@ -17,12 +17,21 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException{
+private:
+   string msg;
+public:
+   UserAlreadyExistsException(const string& msg) : msg(msg) {}
+
+
+   string getMessage() const {return(msg);}
+
+};
 
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
 protected:
     string password;
@@ -39,6 +48,22 @@ public:
         this->type = type;
     }
 
+    void deleteAccount(vector<AbstractUser*> *users)//TODO 1 : Done
+    {
+        int index = 0;
+        for (auto user=users->begin() ; user != users->end() ; user++)
+        {
+
+            if ((*user)->username == this->username)
+            {
+                users->erase(users->begin() + index);
+                break;
+            }
+            index ++;
+
+
+        }
+    }
     bool authenticate(string username, string password){
         return this->username == username && this->password == password;
     }
@@ -54,10 +79,10 @@ public:
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
-        //Check if user with that username exists and throw UserAlreadyExistsException in that case
+        //Check if user with that usernameitVectorData exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+            if ((*user)->username == username){
+                UserAlreadyExistsException ex("The username is Already Exists");;
                 throw ex;
             }
         }
@@ -66,7 +91,7 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
 
-    string username;
+  //  string username;
 };
 
 enum MenuState{
@@ -96,6 +121,7 @@ int main(){
     cout << "Welcome!" << endl;
 
     while(menuState != MenuState::END){
+        system("clear");
         switch (menuState){
             case MenuState::START: {
 
@@ -124,8 +150,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                        } catch (UserAlreadyExistsException& e) {
+                            cout << e.getMessage();
                         }
                         break;
                     }
