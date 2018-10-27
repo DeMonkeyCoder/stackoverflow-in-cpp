@@ -18,7 +18,10 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException{  //TODO: Give exceptions a better structure. search google (optional)
+
+
+};
 
 class AbstractUser{ // User structure
 public:
@@ -44,13 +47,14 @@ public:
         return this->username == username && this->password == password;
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password){
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
             }
         }
-        return nullptr;
+        UserAlreadyExistsException ex;
+        throw ex;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
