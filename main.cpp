@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -16,7 +15,18 @@ enum UserType{
     MEMBER
 };
 
-class UserAlreadyExistsException{
+class UserSignUpException: public exception{
+    const char* message;
+public:
+    UserSignUpException(const char* message){
+        this->message = message;
+    };
+    const char* what() const throw(){
+        return message;
+    }
+};
+
+class UserLoginException: public exception{
     
 };
 
@@ -64,9 +74,9 @@ public:
             }
         }
         if (usrname) {
-            throw 2;
+            throw "Error: username not found!";
         } else {
-            throw 1;
+            throw "Error: password is not correct";
         }
     }
     
@@ -75,7 +85,8 @@ public:
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) {
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+                const char * exceptionMessage = "Error: user already exsit!";
+                UserSignUpException ex(exceptionMessage);
                 throw ex;
             }
         }
@@ -142,8 +153,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists!"<<endl;
+                        } catch (UserSignUpException& e) {
+                            cout << e.what() <<endl;
                         }
                         break;
                     }
