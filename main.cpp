@@ -43,7 +43,7 @@ public:
     virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!(done)
     string username;
 protected:
-    string password;
+    int  password;
     UserType type;
 };
 
@@ -53,12 +53,12 @@ public:
 
     User(string username, string password, UserType type){
         this->username = username;
-        this->password = password;
+        this->password = HashPassword(password);
         this->type = type;
     }
 
     bool authenticate(string username, string password){
-        return this->username == username && this->password == password;
+        return this->username == username && this->password == HashPassword(password);
     }
     void deleteAccount(vector <AbstractUser*> *users){
         vector<AbstractUser*> :: iterator ptr;
@@ -95,6 +95,17 @@ public:
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
+    int HashPassword(string const &Combine) { 
+        unsigned int hash = 0;
+
+        const unsigned int VALUE = Combine.length();
+        for (auto Letter : Combine)
+        {
+            srand(VALUE*Letter);
+            hash += 33 + rand() % 92;
+        }
+        return hash;
+}
 
     //string username;
 };
