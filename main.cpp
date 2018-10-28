@@ -16,20 +16,20 @@ enum UserType{
     MEMBER
 };
 
-class usernotfoundexception:public exception{
+class UserNotFoundException:public exception{
         const char* message;
 public:
-    usernotfoundexception(const char* message){    
+    UserNotFoundException(const char* message){    
         this->message=message;
     } 
     const char* what() const throw(){
         return message;
     }
 };
-class useralreadyexistexception: public exception{
+class UserAlreadyExistException: public exception{
     const char* message;
 public:
-    useralreadyexistexception(const char* message){    
+    UserAlreadyExistException(const char* message){    
         this->message=message;
     } 
     const char* what() const throw(){
@@ -77,7 +77,7 @@ public:
             }
         }
         const char* message="Error: No user with this information!";
-        usernotfoundexception ex(message); 
+        UserNotFoundException ex(message); 
         throw ex;
     }
 
@@ -87,7 +87,7 @@ public:
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
             if ((*user)->username == username) {
                 const char* message="Error: User already exist!";
-                useralreadyexistexception ex(message); 
+                UserAlreadyExistException ex(message); 
                 throw ex;
             }
         }
@@ -139,7 +139,7 @@ int main(){
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{loggedInUser=User::login(&appDatabase.appUsers, username, password);}
-                        catch (usernotfoundexception& e){
+                        catch (UserNotFoundException& e){
                                 cout <<e.what()<<endl;
                                 break;
                             }
@@ -157,7 +157,7 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (useralreadyexistexception& e) {
+                        } catch (UserAlreadyExistException& e) {
                             cout << e.what() <<endl;
                         }
                         break;
