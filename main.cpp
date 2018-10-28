@@ -1,4 +1,5 @@
 #include <iostream>
+#include<stdlib.h>
 #include <vector>
 using namespace std;
 
@@ -43,22 +44,24 @@ public:
     virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!(done)
     string username;
 protected:
-    int  password;
+    string  password;
     UserType type;
 };
 
 
 class User : public AbstractUser{
+    string HashedAccount;
 public:
 
     User(string username, string password, UserType type){
-        this->username = username;
+        this->username = HashPassword(username);
         this->password = HashPassword(password);
         this->type = type;
+        this->HashedAccount=HashPassword((username.append(password)).append("stack"));
     }
 
     bool authenticate(string username, string password){
-        return this->username == username && this->password == HashPassword(password);
+        return this->HashedAccount == HashPassword((username.append(password)).append("stack"));
     }
     void deleteAccount(vector <AbstractUser*> *users){
         vector<AbstractUser*> :: iterator ptr;
@@ -80,12 +83,22 @@ public:
         UserNotFoundException ex(message); 
         throw ex;
     }
+    static string HashPassword(string const &Combine) { 
+        unsigned int hash = 0;
 
+        const unsigned int VALUE = Combine.length();
+        for (auto Letter : Combine)
+        {
+            srand(VALUE*Letter);
+            hash += 33 + rand() % 92;
+        }
+        return to_string(hash);
+}
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
-            if ((*user)->username == username) {
+            if ((*user)->username == HashPassword(username)) {
                 const char* message="Error: User already exist!";
                 UserAlreadyExistException ex(message); 
                 throw ex;
@@ -95,17 +108,7 @@ public:
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
-    int HashPassword(string const &Combine) { 
-        unsigned int hash = 0;
 
-        const unsigned int VALUE = Combine.length();
-        for (auto Letter : Combine)
-        {
-            srand(VALUE*Letter);
-            hash += 33 + rand() % 92;
-        }
-        return hash;
-}
 
     //string username;
 };
