@@ -54,14 +54,14 @@ class User : public AbstractUser{
 public:
 
     User(string username, string password, UserType type){
-        this->username = HashPassword(username);
-        this->password = HashPassword(password);
+        this->username = Hash(username);
+        this->password = Hash(password);
         this->type = type;
-        this->HashedAccount=HashPassword((username.append(password)).append("stack"));
+        this->HashedAccount=Hash((username.append(password)).append("stack"));
     }
 
     bool authenticate(string username, string password){
-        return this->HashedAccount == HashPassword((username.append(password)).append("stack"));
+        return this->HashedAccount == Hash((username.append(password)).append("stack"));
     }
     void deleteAccount(vector <AbstractUser*> *users){
         vector<AbstractUser*> :: iterator ptr;
@@ -83,7 +83,7 @@ public:
         UserNotFoundException ex(message); 
         throw ex;
     }
-    static string HashPassword(string const &Combine) { 
+    static string Hash(string const &Combine) { 
         unsigned int hash = 0;
 
         const unsigned int VALUE = Combine.length();
@@ -98,7 +98,7 @@ public:
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
-            if ((*user)->username == HashPassword(username)) {
+            if ((*user)->username == Hash(username)) {
                 const char* message="Error: User already exist!";
                 UserAlreadyExistException ex(message); 
                 throw ex;
