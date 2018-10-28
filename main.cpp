@@ -81,8 +81,6 @@ public:
 		//Create user and add it to vector
 		users->push_back(new User(username, password, UserType::MEMBER));
 	}
-
-	string username;
 };
 
 enum MenuState {
@@ -191,4 +189,3 @@ int main() {
 	return 0;
 
 }
-
