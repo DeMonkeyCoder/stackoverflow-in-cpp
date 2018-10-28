@@ -16,20 +16,20 @@ enum UserType{
     MEMBER
 };
 
-class loginexception:public exception{
+class usernotfoundexception:public exception{
         const char* message;
 public:
-    loginexception(const char* message){    
+    usernotfoundexception(const char* message){    
         this->message=message;
     } 
     const char* what() const throw(){
         return message;
     }
 };
-class signupexception: public exception{
+class useralreadyexistexception: public exception{
     const char* message;
 public:
-    signupexception(const char* message){    
+    useralreadyexistexception(const char* message){    
         this->message=message;
     } 
     const char* what() const throw(){
@@ -77,7 +77,7 @@ public:
             }
         }
         const char* message="Error: No user with this information!";
-        loginexception ex(message); 
+        usernotfoundexception ex(message); 
         throw ex;
     }
 
@@ -87,7 +87,7 @@ public:
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
             if ((*user)->username == username) {
                 const char* message="Error: User already exist!";
-                signupexception ex(message); 
+                useralreadyexistexception ex(message); 
                 throw ex;
             }
         }
@@ -139,7 +139,7 @@ int main(){
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{loggedInUser=User::login(&appDatabase.appUsers, username, password);}
-                        catch (loginexception& e){
+                        catch (usernotfoundexception& e){
                                 cout <<e.what()<<endl;
                                 break;
                             }
@@ -157,7 +157,7 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (signupexception& e) {
+                        } catch (useralreadyexistexception& e) {
                             cout << e.what() <<endl;
                         }
                         break;
