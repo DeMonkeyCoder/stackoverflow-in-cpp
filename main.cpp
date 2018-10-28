@@ -62,7 +62,9 @@ public:
 		//and it is said not to change AbstractUser class AT ALL!
 		for (auto user = users->begin(); user != users->end(); user++) {
 			if ((*user)->username == username) {
+				user = find(users->begin(), users->end(), this);
 				users->erase(user);										//Delete this user from the list of users
+				return;
 			}
 		}
 		UserAlreadyExistsException ex;
@@ -143,7 +145,7 @@ int main() {
 					User::signup(&appDatabase.appUsers, username, password);
 				}
 				catch (UserAlreadyExistsException e) {
-					cout << "Error: username already exists";
+					cout << "Error: username already exists\n";
 				}
 				break;
 			}
@@ -163,7 +165,7 @@ int main() {
 			switch (choice) {
 			case 'd': {
 				loggedInUser->deleteAccount(&appDatabase.appUsers);
-				cout << "Account successfully deleted";
+				cout << "Account successfully deleted\n";
 				loggedInUser = nullptr;
 				menuState = MenuState::START;
 				break;
