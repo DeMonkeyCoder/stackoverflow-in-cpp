@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 /**
@@ -123,12 +124,14 @@ int main() {
 				cin >> username;
 				cout << "Enter Password" << endl;
 				cin >> password;
-				loggedInUser = User::login(&appDatabase.appUsers, username, password);
-				if (loggedInUser == nullptr) {
-					cout << "couldn't login with given credentials.";
-				}
-				else {
+				try
+				{
+					loggedInUser = User::login(&appDatabase.appUsers, username, password);
 					menuState = MenuState::LOGGED_IN;
+				}
+				catch (UserAlreadyExistsException ex)
+				{
+					cout << "couldn't login with given credentials.";
 				}
 				break;
 			}
