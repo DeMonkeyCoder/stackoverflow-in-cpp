@@ -62,11 +62,10 @@ public:
     }
     
     void deleteAccount(vector<AbstractUser*> *users){
-        int dltAcc=0;
-        for (auto user = users->begin(); !dltAcc; user++) {
+        for (auto user = users->begin(); user != users->end(); user++) {
             if ((*user) == this) {
                 users->erase(user);
-                dltAcc = 1;
+                break;
             }
         }
     }
@@ -140,9 +139,9 @@ int main(){
                 switch(choice) {
                     case '1': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter Username :" << endl;
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter Password :" << endl;
                         cin >> password;
                         try {
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
@@ -204,5 +203,4 @@ int main(){
         }
     }
     return 0;
-    
 }
