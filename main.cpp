@@ -16,11 +16,20 @@ enum UserType{
     MEMBER
 };
 
-
-class Userexception: public exception{
+class loginexception:public exception{
+        const char* message;
+public:
+    loginexception(const char* message){    
+        this->message=message;
+    } 
+    const char* what() const throw(){
+        return message;
+    }
+};
+class signupexception: public exception{
     const char* message;
 public:
-    Userexception(const char* message){    
+    signupexception(const char* message){    
         this->message=message;
     } 
     const char* what() const throw(){
@@ -68,7 +77,7 @@ public:
             }
         }
         const char* message="Error: No user with this information!";
-        Userexception ex(message); 
+        loginexception ex(message); 
         throw ex;
     }
 
@@ -78,7 +87,7 @@ public:
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!(done)
             if ((*user)->username == username) {
                 const char* message="Error: User already exist!";
-                Userexception ex(message); 
+                signupexception ex(message); 
                 throw ex;
             }
         }
@@ -130,7 +139,7 @@ int main(){
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{loggedInUser=User::login(&appDatabase.appUsers, username, password);}
-                        catch (Userexception& e){
+                        catch (loginexception& e){
                                 cout <<e.what()<<endl;
                                 break;
                             }
@@ -148,7 +157,7 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (Userexception& e) {
+                        } catch (signupexception& e) {
                             cout << e.what() <<endl;
                         }
                         break;
