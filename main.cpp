@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <exception>
 using namespace std;
 
 /**
@@ -19,7 +20,21 @@ enum UserType {
 };
 
 
-class UserAlreadyExistsException { }; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException : public exception {
+public:
+	virtual const char* what() const throw()
+	{
+		return "Error: username already exists\n";
+	}
+};
+
+class UserNotExistException : public exception {
+public:
+	virtual const char* what() const throw()
+	{
+		return "couldn't login with given credentials.\n";
+	}
+};
 
 class AbstractUser { // User structure
 public:
@@ -51,7 +66,7 @@ public:
 				return (User*)*user;
 			}
 		}
-		UserAlreadyExistsException ex;
+		UserNotExistException ex;
 		throw ex;
 	}
 
@@ -129,9 +144,9 @@ int main() {
 					loggedInUser = User::login(&appDatabase.appUsers, username, password);
 					menuState = MenuState::LOGGED_IN;
 				}
-				catch (UserAlreadyExistsException ex)
+				catch (UserNotExistException ex)
 				{
-					cout << "couldn't login with given credentials.";
+					cout << ex.what();
 				}
 				break;
 			}
@@ -145,7 +160,7 @@ int main() {
 					User::signup(&appDatabase.appUsers, username, password);
 				}
 				catch (UserAlreadyExistsException e) {
-					cout << "Error: username already exists\n";
+					cout << e.what();
 				}
 				break;
 			}
@@ -186,6 +201,8 @@ int main() {
 			break;
 		}
 		}
+		system("pause");
+		system("cls");
 	}
 
 	return 0;
