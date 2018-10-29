@@ -124,7 +124,6 @@ int main(){
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-
     char choice;
     cout << "Welcome!" << endl;
 
@@ -136,6 +135,7 @@ int main(){
                 cin >> choice;
                 switch(choice) {
                     case '1': {
+                        system("clear");
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
@@ -148,9 +148,11 @@ int main(){
                             continue;
                         }
                         menuState = MenuState::LOGGED_IN;
+                        system("clear");
                         break;
                     }
                     case '2': {
+                        system("clear");
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
@@ -161,6 +163,7 @@ int main(){
                         } catch (UserAlreadyExistsException e) {
                             cout << e.explain <<endl;
                         }
+                        system("clear");
                         break;
                     }
                     case 'e': {
@@ -168,32 +171,38 @@ int main(){
                         break;
                     }
                     default: {
+                        system("clear");
                         cout << "Unknown Input" << endl;
                     }
                 }
                 break;
             }
             case MenuState::LOGGED_IN: {
+                system("clear");
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted"<<endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
+                        system("clear");
                         break;
                     }
                     case 'l': {
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
+                        system("clear");
                         break;
                     }
                     case 'e': {
                         menuState = MenuState::END;
+                        system("clear");
                         break;
                     }
                     default: {
+                        system("clear");
                         cout << "Unknown Input" << endl;
                     }
                 }
