@@ -36,6 +36,14 @@ public:
 	}
 };
 
+class UnknownInput : public exception {
+public:
+	virtual const char* what() const throw()
+	{
+		return "Unknown Input\n";
+	}
+};
+
 class AbstractUser { // User structure
 public:
 	virtual bool authenticate(string username, string password) = 0;
@@ -171,7 +179,9 @@ int main() {
 				break;
 			}
 			default: {
-				cout << "Unknown Input" << endl;
+				UnknownInput ui;
+
+				cout << ui.what();
 			}
 			}
 			break;
@@ -190,6 +200,7 @@ int main() {
 			case 'l': {
 				loggedInUser = nullptr;
 				menuState = MenuState::START;
+				cout << "You logged out successfullt.\n";
 				break;
 			}
 			case 'e': {
@@ -197,7 +208,8 @@ int main() {
 				break;
 			}
 			default: {
-				cout << "Unknown Input" << endl;
+				UnknownInput ui;
+				cout << ui.what();
 			}
 			}
 			break;
