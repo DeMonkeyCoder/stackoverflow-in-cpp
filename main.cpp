@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include<stdlib.h>
 using namespace std;
 
 /**
@@ -16,9 +18,40 @@ enum UserType{
     MEMBER
 };
 
+class AbstractUser;
+class PassOrUsNotCorrect{
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+public:
+   PassOrUsNotCorrect(const string& msg) : msg_(msg) {}
+  ~PassOrUsNotCorrect() {}
 
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+class UserAlreadyExistsException{
+
+public:
+   UserAlreadyExistsException(const string& msg) : msg_(msg) {}
+  ~UserAlreadyExistsException() {}
+
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+class userNotFound{
+
+public:
+   userNotFound(const string& msg) : msg_(msg) {}
+  ~userNotFound() {}
+
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+ //TODO: Give exceptions a better structure. search google (optional)
+
+class User;
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
@@ -32,9 +65,18 @@ protected:
 
 class User : public AbstractUser{
 public:
+bool deleteAccount(vector<AbstractUser*>*users){
+for(auto user = users->begin(); user != users->end(); user++){
+            if((*user)->username==username){
+                users->erase(user);
+                return 1;
 
+            }
+
+}}
     User(string username, string password, UserType type){
         this->username = username;
+this->AbstractUser::username=username;
         this->password = password;
         this->type = type;
     }
@@ -43,21 +85,38 @@ public:
         return this->username == username && this->password == password;
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password){
+    int flag=0;
+     for(auto user = users->begin(); user != users->end(); user++) {
+        //TODO: 3. this doesn't work. fix it!!
+            if(((*user)->username) == username) {
+                flag=1;
+            }}
+             if (flag==0){
+        userNotFound e("Username not found.\n");
+        throw e;
+        return nullptr;}
         for(auto user = users->begin(); user != users->end(); user++){
+
             if((*user)->authenticate(username, password)){
+
                 return (User*) *user;
+
             }
         }
-        return nullptr;
+
+        PassOrUsNotCorrect e("password or username is not correct.\n");
+        throw e;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+        for(auto user = users->begin(); user != users->end(); user++) {
+        //TODO: 3. this doesn't work. fix it!!
+            if(((*user)->username) == username) {
+
+                UserAlreadyExistsException ex("UserAlreadyExists\n");
                 throw ex;
             }
         }
@@ -98,7 +157,7 @@ int main(){
     while(menuState != MenuState::END){
         switch (menuState){
             case MenuState::START: {
-
+system("clear");
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
@@ -108,12 +167,20 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        } catch (PassOrUsNotCorrect e) {
+                            cout << e.getMessage()<<endl;
+                             system("read");
+                            break;}
+                            catch(userNotFound e){
+                              cout << e.getMessage()<<endl;
+                              system("read");
+                            break;}
+
+
                             menuState = MenuState::LOGGED_IN;
-                        }
+
                         break;
                     }
                     case '2': {
@@ -125,8 +192,10 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.getMessage()<<endl;
+                            system("read");
                         }
+                         menuState = MenuState::LOGGED_IN;
                         break;
                     }
                     case 'e': {
@@ -135,11 +204,13 @@ int main(){
                     }
                     default: {
                         cout << "Unknown Input" << endl;
+
                     }
                 }
                 break;
             }
             case MenuState::LOGGED_IN: {
+            system("clear");
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
@@ -151,7 +222,9 @@ int main(){
                         break;
                     }
                     case 'l': {
-                        loggedInUser = nullptr;
+                           loggedInUser=nullptr;
+                           menuState=MenuState::START;
+
                         menuState = MenuState::START;
                         break;
                     }
@@ -161,6 +234,7 @@ int main(){
                     }
                     default: {
                         cout << "Unknown Input" << endl;
+
                     }
                 }
                 break;
