@@ -7,10 +7,10 @@ using namespace std;
 /**
 * In the name of God
 * Homework 2
-* TODO: Complete this code using given TODO comments :). then remove TODOs
-* feel free to edit code as you want and make it better
-* Any questions? ask @devcom_support on telegram
-* Good luck!
+* Sara Limooee
+* std no : 9632421
+* homework done with visual studio! ^^)
+* Optinal : better structure for exception classes is done.
 **/
 
 
@@ -142,6 +142,7 @@ int main() {
 				try
 				{
 					loggedInUser = User::login(&appDatabase.appUsers, username, password);
+					cout << "You logged in successfully.\n";
 					menuState = MenuState::LOGGED_IN;
 				}
 				catch (UserNotExistException ex)
@@ -158,6 +159,7 @@ int main() {
 				cin >> password;
 				try {
 					User::signup(&appDatabase.appUsers, username, password);
+					cout << "You signed up successfully.\n";
 				}
 				catch (UserAlreadyExistsException e) {
 					cout << e.what();
