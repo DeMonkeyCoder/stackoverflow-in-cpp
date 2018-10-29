@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 /**
@@ -16,13 +17,21 @@ enum UserType{
     MEMBER
 };
 
-
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class LoginErrorException{
+public:
+    string explain;
+    LoginErrorException():explain("either the username or the password is incorrect"){}
+};
+class UserAlreadyExistsException{
+public:
+    string explain;
+    UserAlreadyExistsException():explain("this user already exists"){}
+}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
 protected:
     string password;
@@ -43,11 +52,34 @@ public:
         return this->username == username && this->password == password;
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
-        for(auto user = users->begin(); user != users->end(); user++){
-            if((*user)->authenticate(username, password)){
-                return (User*) *user;
+    void deleteAccount(vector<AbstractUser*> *users){
+        for (auto it = users->begin(); it != users->end(); it++){
+            if((*it)->username == username){
+               users->erase(it);
+               break;
             }
+        }
+    }
+
+
+    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+        int flag = 0;
+        for(auto user = users->begin(); user != users->end(); user++){
+            if((*user)->username == username){
+                flag = 1;
+                bool res = (*user)->authenticate(username, password);
+                if (res){
+                    return (User*) *user;
+                }
+                else{
+                    LoginErrorException err;
+                    throw err;
+                }
+            }
+        }
+        if (flag == 0){
+            LoginErrorException err;
+            throw err;
         }
         return nullptr;
     }
@@ -61,12 +93,13 @@ public:
                 throw ex;
             }
         }
-
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
+        
+        return;
     }
 
-    string username;
+    
 };
 
 enum MenuState{
@@ -108,12 +141,13 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        }catch(LoginErrorException er){
+                            cout << er.explain << endl;
+                            continue;
                         }
+                        menuState = MenuState::LOGGED_IN;
                         break;
                     }
                     case '2': {
@@ -125,7 +159,7 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.explain <<endl;
                         }
                         break;
                     }
@@ -167,7 +201,6 @@ int main(){
             }
         }
     }
-
     return 0;
 
 }
