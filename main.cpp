@@ -18,7 +18,15 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException:public exception{
+    string msg;
+    public:
+        UserAlreadyExistsException(const string msg):msg(msg){}
+        virtual const void what(){
+            std:cout<<endl<<msg<<endl;
+        }
+
+}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -33,17 +41,18 @@ protected:
 
 class User : public AbstractUser{
 public:
-
+    
     bool deleteAccount(vector<AbstractUser*> *users){
         for(auto user = users->begin(); user != users->end(); user++) {
+            if(this->type==ADMIN){break;}
             if((*user)->authenticate(this->username, this->password)){
                 users->erase(user);
                 return 1;
                 break;
             }
         }
-        UserAlreadyExistsException ex;
-        throw ex;                                                         //error
+        UserAlreadyExistsException ex("This user is not successfully deleted");
+        throw ex;                                                         
         return 0;
     }
 
@@ -57,21 +66,27 @@ public:
         return this->username == username && this->password == password;
     }
 
+    bool CheckPass(string pass){
+        return this->password == password;
+    }
+
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
             }
         }
+        UserAlreadyExistsException ex("Your username or Your password is incorrect");
+        throw ex;
         return nullptr;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
-
+        
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+                UserAlreadyExistsException ex("Error: username already exists");
                 throw ex;
             }
         }
@@ -80,7 +95,6 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
 
-    string username;
 };
 
 enum MenuState{
@@ -122,10 +136,14 @@ int main(){
                         cin >> username;
                         cout << "\nEnter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "\ncouldn't login with given credentials.";
-                        } else {
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        }
+                        catch(UserAlreadyExistsException e){
+                            e.what();
+                            loggedInUser = nullptr;
+                        }
+                        if (loggedInUser != nullptr) {
                             menuState = MenuState::LOGGED_IN;
                         }
                         break;
@@ -139,7 +157,7 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "\nError: username already exists";
+                            e.what();
                         }
                         break;
                     }
@@ -158,11 +176,16 @@ int main(){
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
-                        loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "\nAccount successfully deleted";
-                        loggedInUser = nullptr;
-                        menuState = MenuState::START;
-                        break;
+                        try{
+                            loggedInUser->deleteAccount(&appDatabase.appUsers);
+                            cout << "\nAccount successfully deleted";
+                            loggedInUser = nullptr;
+                            menuState = MenuState::START;
+                            break;
+                        }
+                        catch(UserAlreadyExistsException e){
+                            e.what();
+                        }
                     }
                     case 'l': {
                         loggedInUser = nullptr;
