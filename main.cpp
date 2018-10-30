@@ -11,6 +11,8 @@ using namespace std;
  * Good luck!
  **/
 
+int integer;
+
 enum UserType{
     ADMIN,
     MEMBER
@@ -31,7 +33,7 @@ public:
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual void deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
     string username;
 protected:
     string password;
@@ -48,7 +50,7 @@ public:
         this->type = type;
     }
 
-    void deleteAccount(vector<AbstractUser*> *users)//TODO 1 : Done
+    void deleteAccount(vector<AbstractUser*> *users)
     {
         int index = 0;
         for (auto user=users->begin() ; user != users->end() ; user++)
@@ -74,7 +76,9 @@ public:
                 return (User*) *user;
             }
         }
-        return nullptr;
+        string s = "Username or password is false";
+        throw s;
+       // return nullptr;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
@@ -82,7 +86,7 @@ public:
         //Check if user with that usernameitVectorData exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
             if ((*user)->username == username){
-                UserAlreadyExistsException ex("The username is Already Exists");;
+                UserAlreadyExistsException ex("The username is Already Exists");
                 throw ex;
             }
         }
@@ -113,33 +117,41 @@ public:
 };
 
 int main(){
+    char response;
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
 
     char choice;
-    cout << "Welcome!" << endl;
-
     while(menuState != MenuState::END){
         system("clear");
+        cout << "Welcome!" << endl;
         switch (menuState){
             case MenuState::START: {
 
                 cout << "1. login\n2. signup\ne. exit\n";
+                cout << "choice: ";
                 cin >> choice;
                 switch(choice) {
                     case '1': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter Username:" << endl;
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter Password:" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                            if (loggedInUser != nullptr)
+                            {
+                                menuState = MenuState::LOGGED_IN;
+                            }
+                        }catch(string& s)
+                        {
+                            cout << s<< endl;
+                            cout << "Press any key to retry again";
+                            cin.ignore().get(); 
                         }
+                        
                         break;
                     }
                     case '2': {
@@ -151,7 +163,9 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException& e) {
-                            cout << e.getMessage();
+                            cout << e.getMessage()<<endl;
+                            cout << "Press any key to retry again";
+                            cin.ignore().get(); 
                         }
                         break;
                     }
