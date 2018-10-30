@@ -61,25 +61,23 @@ public:
         return this->username == username and this->password == password;
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password) { //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password) {
         for(auto user = users->begin(); user != users->end(); user++) {
-            if((*user)->authenticate(username, password)){
+            if((*user)->authenticate(username, password)) {
                 return (User*) *user;
             }
         }
-
+        WrongUsernameOrPasswordException ex;
+        throw ex;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password) {
-
-        //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+        for(auto user = users->begin(); user != users->end(); user++) {
             if((*user)->username == username) {
                 UserAlreadyExistsException ex;
                 throw ex;
             }
         }
-
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
@@ -106,7 +104,7 @@ public:
 
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
-                                    "admin" /* password is unsafe! for test only */,
+                                    "admin", /* password is unsafe! for test only */
                                     UserType::ADMIN)
         );
     }
