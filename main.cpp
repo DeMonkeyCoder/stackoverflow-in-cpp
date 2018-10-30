@@ -72,8 +72,8 @@ public:
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user :*users) { //TODO: 3. this doesn't work. fix it!!
-            if (strcmp(username.c_str(),user->getUsername().c_str()) == 0) {
+        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+            if (strcmp(username.c_str(), (*user)->getUsername().c_str()) == 0) {
                 UserException ex("User Already Exists");
                 throw ex;
             }
