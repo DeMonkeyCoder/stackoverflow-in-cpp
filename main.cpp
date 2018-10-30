@@ -27,7 +27,7 @@ public:
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(vector<AbstractUser *> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
     string username;
 
     virtual string usernames()=0;
@@ -76,7 +76,7 @@ public:
         //Create user and add user to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
-    bool deleteAccount(vector<AbstractUser*> *users){
+    void deleteAccount(vector<AbstractUser *> *users){
 
                auto user = (*users).begin();
                int i=0;
