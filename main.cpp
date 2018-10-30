@@ -16,8 +16,38 @@ enum UserType{
     MEMBER
 };
 
+class noUser{
+public:
+   noUser(const string& msg) : msg_(msg) {}
+  ~noUser() {}
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+
+class wrngpass{
+public:
+   wrngpass(const string& msg) : msg_(msg) {}
+  
+
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+
+
+class UserAlreadyExistsException{
+public:
+   UserAlreadyExistsException(const string& msg) : msg_(msg) {}
+
+   string getMessage() const {return(msg_);}
+private:
+   string msg_;
+};
+
+
+ //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -32,7 +62,17 @@ protected:
 
 class User : public AbstractUser{
 public:
-
+	bool deleteAccount(vector<AbstractUser*> *users)
+    {
+    	for (auto user = users->begin() ; user!= users->end();user++ )
+    	{
+    		if ((*user)->username ==username)
+    		{
+    			users->erase(user);
+    			return 0;
+			}
+		}
+	}
     User(string username, string password, UserType type){
         this->username = username;
         this->password = password;
@@ -44,29 +84,44 @@ public:
     }
 
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+        int x=0;
         for(auto user = users->begin(); user != users->end(); user++){
+            if((*user)->username==username){
+            	x=1;
+            }
+        }
+  if (x==0)
+        {
+        	noUser a("user not found.\n");
+        	throw a;
+        	return nullptr;
+		}      
+	    for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
+            	x=1;
                 return (User*) *user;
             }
         }
-        return nullptr;
+        wrngpass e("wrong password or username.\n");
+        throw e;
+     
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
+			if ((*user)->username == username) {
+                UserAlreadyExistsException ex("user already exists");
                 throw ex;
             }
         }
 
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
-    }
+}
 
-    string username;
+    
 };
 
 enum MenuState{
@@ -108,12 +163,18 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
+                        try{
+						loggedInUser = User::login(&appDatabase.appUsers, username, password);}catch(noUser a){
+							cout<<a.getMessage()<<endl;
+							break;
+						}
+						catch(wrngpass a){
+							cout<<a.getMessage()<<endl;
+							break;
+						}
+                        
                             menuState = MenuState::LOGGED_IN;
-                        }
+                        
                         break;
                     }
                     case '2': {
@@ -124,9 +185,12 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                        } catch (UserAlreadyExistsException ex) {
+                            cout << ex.getMessage()<<endl;
+                            break;
                         }
+                               menuState = MenuState::LOGGED_IN;
+        
                         break;
                     }
                     case 'e': {
@@ -169,6 +233,7 @@ int main(){
     }
 
     return 0;
-
 }
+
+
 
