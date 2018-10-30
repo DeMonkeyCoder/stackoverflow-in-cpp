@@ -162,6 +162,9 @@ int main(){
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
                             cout << e.explain <<endl;
+                            cout << "press enter to continue" << endl;
+                            system("read");
+
                         }
                         system("clear");
                         break;
@@ -178,16 +181,15 @@ int main(){
                 break;
             }
             case MenuState::LOGGED_IN: {
-                system("clear");
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
+                        system("clear");
                         cout << "Account successfully deleted"<<endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
-                        system("clear");
                         break;
                     }
                     case 'l': {
