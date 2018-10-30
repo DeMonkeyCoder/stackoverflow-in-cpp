@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <exception>
+
 using namespace std;
 
 /**
@@ -17,57 +19,127 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException: public exception{
+    const char* exceptionMessage = "The user exists!";
+public:
+    virtual const char* getMessage() const throw()
+    {
+        return exceptionMessage;
+    }
+};
+
+class UserNotFoundException: public exception{
+    const char* exceptionMessage = "couldn't login with given credentials.";
+public:
+    virtual const char* getMessage() const throw()
+    {
+        return exceptionMessage;
+    }
+};
+
+class DeleteAccountException: public exception{
+    const char* exceptionMessage = "couldn't delete your account. sry!";
+public:
+    virtual const char* getMessage() const throw()
+    {
+        return exceptionMessage;
+    }
+};
+
+// we do the hash things here. This can be refined later!
+class PHash{
+    string salt = "";
+public:
+    PHash(string salt):salt(salt){}
+    
+    string doHash(string str){
+        hash <string> hash;
+        return to_string(hash(str));
+    }
+};
+
+PHash phash("");
+
+class AbstractUsers{
+public:
+    virtual UserType login(string username, string password) = 0;
+    virtual void deleteAccount(string username) = 0;
+    virtual void signup(string username, string password) = 0;
+};
 
 class AbstractUser{ // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
-    virtual bool deleteAccount(vector<AbstractUser*> *users) = 0; //TODO: 1. implement this in User class. (You can't compile code and create instance of User until then). DON'T TOUCH ABSTRACT USER!
+    virtual void deleteAccount(AbstractUsers *users) = 0;
     string username;
+    UserType type;
 protected:
     string password;
-    UserType type;
 };
 
-
-class User : public AbstractUser{
+class User:public AbstractUser{
 public:
-
+    
     User(string username, string password, UserType type){
         this->username = username;
-        this->password = password;
+        this->password = phash.doHash(password);
         this->type = type;
     }
-
+    
     bool authenticate(string username, string password){
-        return this->username == username && this->password == password;
+        return this->username == username && this->password == phash.doHash(password);
     }
+    
+    void deleteAccount(AbstractUsers *users){
+        users->deleteAccount(this->username);
+    }
+    
+};
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
-        for(auto user = users->begin(); user != users->end(); user++){
+class Users:public AbstractUsers{
+protected:
+    vector<AbstractUser *> users;
+public:
+    Users(vector<AbstractUser *> *users){
+        this->users = *users;
+    }
+    
+    UserType login(string username, string password){
+        for(auto user = users.begin(); user != users.end(); user++){
             if((*user)->authenticate(username, password)){
-                return (User*) *user;
+                return (*user)->type;
             }
         }
-        return nullptr;
+        UserNotFoundException ex;
+        throw ex;
     }
-
-    static void signup(vector<AbstractUser*> *users, string username, string password){
-
+    
+    void deleteAccount(string username){
+        for(auto user = users.begin(); user != users.end(); user++){
+            if(username == (*user)->username){
+                users.erase(user);
+                return;
+            }
+        }
+        DeleteAccountException ex;
+        throw ex;
+    }
+    
+    void signup(string username, string password){
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+        for(auto user = users.begin(); user != users.end(); user++) {
             if ((*user)->username == username) {
                 UserAlreadyExistsException ex;
                 throw ex;
             }
         }
-
         //Create user and add it to vector
-        users->push_back(new User(username, password, UserType::MEMBER));
+        users.push_back(new User(username, password, UserType::MEMBER));
     }
-
-    string username;
+    
 };
+
+
 
 enum MenuState{
     START,
@@ -78,12 +150,12 @@ enum MenuState{
 class AppDatabase { //Just holds runtime data. doesn't save anything
 public:
     vector<AbstractUser *> appUsers;
-
+    
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
-                                    "admin" /* password is unsafe! for test only */,
+                                    phash.doHash("admin") /* password is unsafe! for test only */,
                                     UserType::ADMIN)
-        );
+                           );
     }
 };
 
@@ -91,14 +163,14 @@ int main(){
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-
+    Users users(&appDatabase.appUsers);
     char choice;
     cout << "Welcome!" << endl;
 
     while(menuState != MenuState::END){
         switch (menuState){
             case MenuState::START: {
-
+                
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
@@ -108,11 +180,13 @@ int main(){
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
+                        try{
+                            UserType userType = users.login(username, password);
+                            loggedInUser = new User(username, password, userType);
                             menuState = MenuState::LOGGED_IN;
+                            cout << "\nWelcome! please choose:\n";
+                        }catch(UserNotFoundException e){
+                            cout << e.getMessage() << "\n\n";
                         }
                         break;
                     }
@@ -123,13 +197,15 @@ int main(){
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{
-                            User::signup(&appDatabase.appUsers, username, password);
+                            users.signup(username, password);
+                            cout << "you successfully registered. please login!\n\n";
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.getMessage() << "\n\n";
                         }
                         break;
                     }
                     case 'e': {
+                        cout << "\nGoodbye\n";
                         menuState = MenuState::END;
                         break;
                     }
@@ -144,19 +220,25 @@ int main(){
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
-                        loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
-                        loggedInUser = nullptr;
-                        menuState = MenuState::START;
+                        try{
+                            loggedInUser->deleteAccount(&users);
+                            loggedInUser = nullptr;
+                            menuState = MenuState::START;
+                            cout << "Account successfully deleted\n\n";
+                        }catch(DeleteAccountException e){
+                            cout << e.getMessage() << "\n\n";
+                        }
                         break;
                     }
                     case 'l': {
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
+                        cout << "\nGoodbye\n\n";
                         break;
                     }
                     case 'e': {
                         menuState = MenuState::END;
+                        cout << "\nGoodbye\n";
                         break;
                     }
                     default: {
@@ -167,8 +249,9 @@ int main(){
             }
         }
     }
-
+    
     return 0;
-
+    
 }
+
 
