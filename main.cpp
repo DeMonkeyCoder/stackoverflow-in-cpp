@@ -90,8 +90,6 @@ public:
                }
     }
 
-
-    string username;
 };
 
 enum MenuState{
