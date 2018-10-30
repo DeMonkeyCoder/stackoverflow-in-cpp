@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <unistd.h>
 using namespace std;
 #define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
@@ -21,7 +22,7 @@ enum UserType {
 
 class UserAlreadyExistsException : public exception {
 private:
-    const string message = "Username already exists!";
+    const string message = "Error: username already exists!";
 public:
     const string what() {
         return message;
@@ -30,7 +31,7 @@ public:
 
 class WrongUsernameOrPasswordException : public exception {
 private:
-    const string message = "Wrong username or password!";
+    const string message = "Error: wrong username or password!";
 public:
     const string what() {
         return message;
@@ -121,42 +122,43 @@ int main() {
     while(menuState != MenuState::END) {
         switch(menuState){
             case MenuState::START: {
-
+                system("clear");
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
-                    case '1': {
-                        string username, password;
-                        cout << "Enter Username" << endl;
+                    case '1': { // login
+                        string username;
+                        cout << "Enter Username: ";
                         cin >> username;
-                        cout << "Enter Password" << endl;
-                        cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
+                        char* pass = getpass("Enter password: ");
+                        string password(pass);
+                        try {
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        } catch(WrongUsernameOrPasswordException e) {
+                            cout << e.what() << endl;
+                            break;
                         }
+                        menuState = MenuState::LOGGED_IN;
                         break;
                     }
-                    case '2': {
-                        string username, password;
-                        cout << "Enter Username" << endl;
+                    case '2': { // signup
+                        string username;
+                        cout << "Enter Username: ";
                         cin >> username;
-                        cout << "Enter Password" << endl;
-                        cin >> password;
+                        char* pass = getpass("Enter password: ");
+                        string password(pass);
                         try {
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.what();
                         }
                         break;
                     }
-                    case 'e': {
+                    case 'e': { // exit
                         menuState = MenuState::END;
                         break;
                     }
-                    default: {
+                    default: { // unknown input
                         cout << "Unknown Input" << endl;
                     }
                 }
@@ -166,23 +168,23 @@ int main() {
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
-                    case 'd': {
+                    case 'd': { // delete account
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted\n";
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
                     }
-                    case 'l': {
+                    case 'l': { // logout
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
                     }
-                    case 'e': {
+                    case 'e': { // exit
                         menuState = MenuState::END;
                         break;
                     }
-                    default: {
+                    default: { // unknown input
                         cout << "Unknown Input" << endl;
                     }
                 }
