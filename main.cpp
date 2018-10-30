@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <algorithm>
 using namespace std;
+#define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
 /**
  * In the name of God
@@ -16,8 +19,23 @@ enum UserType {
     MEMBER
 };
 
+class UserAlreadyExistsException : public exception {
+private:
+    const string message = "Username already exists!";
+public:
+    const string what() {
+        return message;
+    }
+};
 
-class UserAlreadyExistsException {}; //TODO: Give exceptions a better structure. search google (optional)
+class WrongUsernameOrPasswordException : public exception {
+private:
+    const string message = "Wrong username or password!";
+public:
+    const string what() {
+        return message;
+    }
+};
 
 class AbstractUser { // User structure
 public:
@@ -29,16 +47,17 @@ protected:
     UserType type;
 };
 
-
 class User : public AbstractUser {
 public:
     User(string username, string password, UserType type) {
+        lower(username);
         this->username = username;
         this->password = password;
         this->type = type;
     }
 
     bool authenticate(string username, string password) {
+        lower(username);
         return this->username == username and this->password == password;
     }
 
@@ -48,7 +67,7 @@ public:
                 return (User*) *user;
             }
         }
-        return nullptr;
+
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password) {
