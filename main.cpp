@@ -73,7 +73,7 @@ public:
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+        for(auto user = users->begin(); user != users->end(); user++) { 
             if ((*user)->username == username) {
                 UserAlreadyExistsException ex;
                 throw ex;
@@ -83,7 +83,7 @@ public:
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
     }
-    string username;
+    
 };
 
 enum MenuState{
