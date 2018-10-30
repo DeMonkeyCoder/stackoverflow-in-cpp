@@ -115,14 +115,15 @@ int main() {
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-
+    string last_message = "";
     char choice;
-    cout << "Welcome!" << endl;
-
     while(menuState != MenuState::END) {
         switch(menuState){
             case MenuState::START: {
                 system("clear");
+                if(last_message != "")
+                    cout << last_message << endl;
+                last_message = "";
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
@@ -135,7 +136,7 @@ int main() {
                         try {
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
                         } catch(WrongUsernameOrPasswordException e) {
-                            cout << e.what() << endl;
+                            last_message = e.what();
                             break;
                         }
                         menuState = MenuState::LOGGED_IN;
@@ -150,7 +151,7 @@ int main() {
                         try {
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << e.what();
+                            last_message = e.what();
                         }
                         break;
                     }
@@ -159,18 +160,19 @@ int main() {
                         break;
                     }
                     default: { // unknown input
-                        cout << "Unknown Input" << endl;
+                        last_message = "Unknown Input";
                     }
                 }
                 break;
             }
             case MenuState::LOGGED_IN: {
+                system("clear");
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': { // delete account
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted\n";
+                        last_message = "Account successfully deleted";
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
@@ -185,7 +187,7 @@ int main() {
                         break;
                     }
                     default: { // unknown input
-                        cout << "Unknown Input" << endl;
+                        last_message = "Unknown Input";
                     }
                 }
                 break;
