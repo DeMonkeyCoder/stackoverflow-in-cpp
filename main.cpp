@@ -1,16 +1,30 @@
 #include <iostream>
 #include <vector>
+#include <time.h>
 using namespace std;
 
-/**
- * In the name of God
- * Homework 2
- * TODO: Complete this code using given TODO comments :). then remove TODOs
- * feel free to edit code as you want and make it better
- * Any questions? ask @devcom_support on telegram
- * Good luck!
- **/
 
+
+#define KNRM "\x1B[0m"
+#define KRED "\x1B[31m"
+#define KGRN "\x1B[32m"
+#define KYEL "\x1B[33m"
+#define KBLU "\x1B[34m"
+#define KMAG "\x1B[35m"
+#define KCYN "\x1B[36m"
+#define KWHT "\x1B[37m"
+#define RESET "\033[0m"
+
+// a funciton for stop a program for a while
+
+void sleepcp(int milliseconds) // Cross-platform sleep function
+{
+    clock_t time_end;
+    time_end = clock() + milliseconds * CLOCKS_PER_SEC/1000;
+    while (clock() < time_end)
+    {
+    }
+}
 
 enum UserType{
     ADMIN,
@@ -69,7 +83,7 @@ public:
         return this->username == username && this->password == password;
     }
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password){
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
@@ -77,13 +91,11 @@ public:
         }
         string s = "Username or password is false";
         throw s;
-       // return nullptr;
     }
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
-        //Check if user with that usernameitVectorData exists and throw UserAlreadyExistsException in that case
-        for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
+        for(auto user = users->begin(); user != users->end(); user++) {
             if ((*user)->username == username){
                 UserAlreadyExistsException ex("The username is Already Exists");
                 throw ex;
@@ -120,23 +132,24 @@ int main(){
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-
+    int start = 0;
     char choice;
-    while(menuState != MenuState::END){
+    while(menuState != MenuState::END){cout << KYEL << "choice: "<<RESET;
         system("clear");
-        cout << "Welcome!" << endl;
+        if (start++ == 0)
+        cout << KMAG << "Welcome!" << RESET << endl;
         switch (menuState){
             case MenuState::START: {
 
-                cout << "1. login\n2. signup\ne. exit\n";
-                cout << "choice: ";
+                cout << KGRN << "1. login" <<endl << KBLU << "2. signup" << endl << KRED<< "e. exit"<< endl << RESET;
+                cout << KYEL << "choice: "<<RESET;
                 cin >> choice;
                 switch(choice) {
                     case '1': {
                         string username, password;
-                        cout << "Enter Username:" << endl;
+                        cout << "Enter" << KYEL<<  " YOUR " << KRED << "Username:" <<RESET<< endl;
                         cin >> username;
-                        cout << "Enter Password:" << endl;
+                        cout << "Enter"<< KYEL<<  " YOUR "<< KRED << "Password:" << RESET << endl;
                         cin >> password;
                         try{
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
@@ -146,8 +159,8 @@ int main(){
                             }
                         }catch(string& s)
                         {
-                            cout << s<< endl;
-                            cout << "Press any key to retry again";
+                            cout << KRED << "ERROR: "<< s <<RESET <<endl;
+                            cout << "Press any key to "<< KYEL << "retry" << RESET << " again";
                             cin.ignore().get(); 
                         }
                         
@@ -155,15 +168,15 @@ int main(){
                     }
                     case '2': {
                         string username, password;
-                        cout << "Enter Username" << endl;
+                        cout << "Enter" << KYEL<<  " A " << KRED << "Username:" <<RESET<< endl;
                         cin >> username;
-                        cout << "Enter Password" << endl;
+                        cout << "Enter" << KYEL<<  " A " << KRED << "Password:" <<RESET<< endl;
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException& e) {
-                            cout << e.getMessage()<<endl;
-                            cout << "Press any key to retry again";
+                            cout <<  KRED << "ERROR: "<< e.getMessage()<< RESET<<endl;
+                            cout << "Press any key to "<< KYEL << "retry" << RESET << " again";
                             cin.ignore().get(); 
                         }
                         break;
@@ -179,12 +192,14 @@ int main(){
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d.delete account\nl. logout\ne. exit\n";
+                cout << KRED <<"d."<<RESET<< "delete account\n" << KBLU <<"l." <<RESET<< " logout\n" << KCYN << "e." <<RESET<<" exit\n";
+                cout << KYEL << "choice: "<<RESET;
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted (Please Wait!)" << endl;
+                        sleepcp(3000);
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
