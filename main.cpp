@@ -38,6 +38,15 @@ public:
     }
 };
 
+class DeleteAdminException : public exception {
+private:
+    const string message = "Error: can't delete admin account!";
+public:
+    const string what() {
+        return message;
+    }
+};
+
 class AbstractUser { // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
@@ -84,6 +93,10 @@ public:
     }
 
     void deleteAccount(vector<AbstractUser*> *users) {
+        if(this->type == UserType::ADMIN) {
+            DeleteAdminException ex;
+            throw ex;
+        }
         for(auto user = users->begin(); user != users->end(); user++) {
             if((*user)->username == this->username) {
                 users->erase(user);
@@ -167,11 +180,19 @@ int main() {
             }
             case MenuState::LOGGED_IN: {
                 system("clear");
+                if(last_message != "")
+                    cout << last_message << endl;
+                last_message = "";
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': { // delete account
-                        loggedInUser->deleteAccount(&appDatabase.appUsers);
+                        try {
+                            loggedInUser->deleteAccount(&appDatabase.appUsers);
+                        } catch(DeleteAdminException e) {
+                            last_message = e.what();
+                            break;
+                        }
                         last_message = "Account successfully deleted";
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
