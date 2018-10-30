@@ -42,7 +42,7 @@ public:
 class AbstractUser { // User structure
 public:
 	virtual bool authenticate(string username, string password) = 0;
-	virtual bool deleteAccount(vector<AbstractUser*> *users) = 0;
+	virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
 	string username;
 protected:
 	string password;
@@ -86,7 +86,7 @@ public:
 		users->push_back(new User(username, password, UserType::MEMBER));
 	}
 
-	bool deleteAccount(vector<AbstractUser*> *users) {
+	void deleteAccount(vector<AbstractUser*> *users) {
 		string user, pass;
 		cout << "Please enter your username: ";
 		cin >> user;
@@ -108,7 +108,6 @@ public:
 		for (auto user = users->begin(); user != users->end(); user++)
 			if ((*user)->authenticate(username, password)) {
 				users->erase(user);
-				return 1;
 			}
 	}
 
