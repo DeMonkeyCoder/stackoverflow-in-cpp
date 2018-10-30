@@ -134,7 +134,7 @@ int main(){
     MenuState menuState = MenuState::START;
     int start = 0;
     char choice;
-    while(menuState != MenuState::END){cout << KYEL << "choice: "<<RESET;
+    while(menuState != MenuState::END){
         system("clear");
         if (start++ == 0)
         cout << KMAG << "Welcome!" << RESET << endl;
@@ -199,7 +199,7 @@ int main(){
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
                         cout << "Account successfully deleted (Please Wait!)" << endl;
-                        sleepcp(3000);
+                        sleepcp(2000);
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
