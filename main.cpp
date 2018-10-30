@@ -11,7 +11,6 @@ using namespace std;
  * Good luck!
  **/
 
-int integer;
 
 enum UserType{
     ADMIN,
