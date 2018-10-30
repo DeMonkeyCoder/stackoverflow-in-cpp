@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 #include <sstream>
+#include <unistd.h>
 using namespace std;
 
 /**
@@ -140,10 +141,14 @@ int main(){
     while(menuState != MenuState::END){
         switch (menuState){
             case MenuState::START: {
-                cout << "\n1. login\n2. signup\ne. exit\n";
+                printf("\033[H\033[J");
+                cout << "Main Page\n" << endl;
+                cout << "1 -> login\n2 -> signup\ne -> exit\n";
                 cin >> choice;
                 switch(choice) {
                     case '1': {
+                        printf("\033[H\033[J");
+                        cout << "Login Page\n" << endl;
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
@@ -151,18 +156,30 @@ int main(){
                         cin >> password;
                         try{
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                             if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials." << endl;
+                            if (loggedInUser == nullptr) {
+                                printf("\033[1;31m");
+                                printf("couldn't login with given credentials.\n");
+                                printf("\033[0m");
+                                sleep(3);
                             } else {
                             menuState = MenuState::LOGGED_IN;
+                            printf("\033[1;32m");
+                            printf("Logged in successfully\n");
+                            printf("\033[0m");
+                            sleep(2);
                             }
                         }
                         catch(int e){
-                             cout << "Given password is incorrect" << endl;
+                            printf("\033[1;31m");
+                            printf("Given password is incorrect\n");
+                            printf("\033[0m");
+                            sleep(3);
                         }
                         break;
                     }
                     case '2': {
+                        printf("\033[H\033[J");
+                        cout << "SignUp Page\n" << endl;
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
@@ -170,8 +187,15 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
+                            printf("\033[1;32m");
+                            printf("Signed up successfully\n");
+                            printf("\033[0m");
+                            sleep(2); 
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists" << endl;
+                            printf("\033[1;31m");
+                            printf("Error: username already exists\n");
+                            printf("\033[0m");
+                            sleep(3);
                         }
                         break;
                     }
@@ -180,18 +204,26 @@ int main(){
                         break;
                     }
                     default: {
-                        cout << "Unknown Input" << endl;
+                        printf("\033[1;31m");
+                        printf("Unknown Input\n");
+                        printf("\033[0m");
+                        sleep(3);
                     }
                 }
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d.delete account\nl. logout\ne. exit\n";
+                printf("\033[H\033[J");
+                cout << "Options\n" << endl;
+                cout << "d -> delete account\nl -> logout\ne -> exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted" << endl;
+                        printf("\033[1;32m");
+                        printf("Account successfully deleted\n");
+                        printf("\033[0m");
+                        sleep(3);
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
@@ -206,7 +238,10 @@ int main(){
                         break;
                     }
                     default: {
-                        cout << "Unknown Input" << endl;
+                        printf("\033[1;31m");
+                        printf("Unknown Input\n");
+                        printf("\033[0m");
+                        sleep(3);
                     }
                 }
                 break;
