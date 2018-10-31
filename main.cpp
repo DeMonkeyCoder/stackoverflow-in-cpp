@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "myHash.h"
 using namespace std;
 
 /**
@@ -53,12 +54,12 @@ public:
     
     User(string username, string password, UserType type){
         this->username = username;
-        this->password = password;
+        this->password = md5(password);
         this->type = type;
     }
     
     bool authenticate(string username, string password){
-        return this->username == username && this->password == password;
+        return this->username == username && this->password == md5(password);
     }
     
     void deleteAccount(vector<AbstractUser*> *users){
@@ -204,3 +205,6 @@ int main(){
     }
     return 0;
 }
+
+
+
