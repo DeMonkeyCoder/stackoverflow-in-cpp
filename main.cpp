@@ -15,9 +15,21 @@ enum UserType{
     ADMIN,
     MEMBER
 };
+class AdminDeleteException{
+public:
+    string msg;
+    AdminDeleteException(string text=string("ADMIN CANT BE DELETED!!!\n"))
+    {
+        msg=text;
+    }
+};
 
-
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException{
+    public:
+    string msg;
+    UserAlreadyExistsException(string text)
+    {msg =text;}
+}; //TODO: Give exceptions a better structure. search google (optional)
 
 class AbstractUser{ // User structure
 public:
@@ -57,8 +69,7 @@ public:
         //Check if user with that username exists and throw UserAlreadyExistsException in that case
         for(auto user = users->begin(); user != users->end(); user++) { //TODO: 3. this doesn't work. fix it!!
             if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
-                throw ex;
+                throw UserAlreadyExistsException(username);
             }
         }
 
@@ -66,7 +77,18 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
 
-    string username;
+    bool deleteAccount(vector<AbstractUser*> *users)
+    {
+        if(this ==*(users->begin()))
+            throw AdminDeleteException();
+        for(auto user = users->begin(); user!= users->end();user++)
+            if((*user) == this)
+                {
+                    users->erase(user);
+                    delete this;
+                    return 1;
+                }
+    }
 };
 
 enum MenuState{
@@ -125,7 +147,7 @@ int main(){
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                            cout << e.msg <<endl;
                         }
                         break;
                     }
@@ -143,11 +165,13 @@ int main(){
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
-                    case 'd': {
+                    case 'd': {try{
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
                         cout << "Account successfully deleted";
                         loggedInUser = nullptr;
-                        menuState = MenuState::START;
+                        menuState = MenuState::START;}
+                        catch(AdminDeleteException e)
+                        {cout << e.msg << endl;}
                         break;
                     }
                     case 'l': {
