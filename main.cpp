@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <exception>
 using namespace std;
 
 
@@ -18,7 +19,7 @@ enum UserType{
 };
 
 
-class Exception{
+class Exception: public exception{
 private:
   string msg;
 public:
@@ -57,6 +58,7 @@ public:
           if (((User*)(*it))->username == this->username){ // we cannot access to atributes of an abstract class so,
                                                           // we have to cast AbstractUser* to User* !
               users->erase(it);
+              break;
           }
         }
     }
@@ -86,7 +88,6 @@ public:
         users->push_back(new User(username, password, UserType::MEMBER));
     }
 
-    string username;
 };
 
 enum MenuState{
