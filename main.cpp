@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <exception>
 using namespace std;
 
 /**
@@ -17,7 +18,42 @@ enum UserType{
 };
 
 
-class UserAlreadyExistsException{}; //TODO: Give exceptions a better structure. search google (optional)
+class UserAlreadyExistsException //: public exception
+{
+//private:
+   // const char* error_text = "User Already Exist";
+public:
+   // const char* what()
+   // {
+    //    return error_text;
+   // }
+  string error_text;
+  UserAlreadyExistsException() : error_text("User Already Exists") {}
+
+}; //TODO: Give exceptions a better structure. search google (optional)
+class wrongpassword// : public exception
+{
+//private:
+  //  const char* error_text = "Incorrect Password";
+
+public:
+    string error_text ;
+    wrongpassword() : error_text("Incorrect Password"){}
+};
+
+class idnotfound //: public exception
+{
+//private:
+  //  const char* error_text = "Username Not Found";
+
+public:
+   // const char* what()
+   // {
+   //     return error_text;
+   // }
+  string error_text;
+  idnotfound() : error_text("Id Not found") {}
+};
 
 class AbstractUser{ // User structure
 public:
@@ -61,14 +97,43 @@ public:
         return this->username == username && this->password == password;
     }
 
+
+    // static void check(vector<AbstractUser*> *users,string username)
+    // {
+    //     auto user = users->begin();
+    //     for (user ; user != users->end(); user++)
+    //     {
+    //         if((*user)->username == username)
+    //         break;
+    //     }
+    //     if(user==users->end()+1)
+    //     {
+    //         idnotfound ex;
+    //         throw ex;
+    //     }
+
+    // }
+
+
     static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
             }
+            if(username ==  (*user)->username)
+            {
+                wrongpassword ex;
+                throw ex;
+                return nullptr;
+            }
         }
+        
+        idnotfound ex;
+        throw ex;
         return nullptr;
     }
+
+
 
     static void signup(vector<AbstractUser*> *users, string username, string password){
 
@@ -123,14 +188,36 @@ int main(){
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
+                        // try
+                        // {
+                        //     User::check(&appDatabase.appUsers, username);
+                        //     menuState = MenuState::LOGGED_IN;
+                        // }
+                        // catch(idnotfound ex)
+                        // {
+                        //     cout << ex.what() << endl;
+                        // }
                         cout << "Enter Password" << endl;
                         cin >> password;
-                        loggedInUser = User::login(&appDatabase.appUsers, username, password);
-                        if (loggedInUser == nullptr) {
-                            cout << "couldn't login with given credentials.";
-                        } else {
-                            menuState = MenuState::LOGGED_IN;
+                        try{
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                           // menuState = MenuState::LOGGED_IN;
                         }
+                        catch(idnotfound ex)
+                        {
+                            cout << ex.error_text << endl;
+                            continue;
+                        }
+                        catch (wrongpassword ex)
+                        {
+                            cout << ex.error_text << endl ;
+                            continue;
+                        }
+                        menuState = MenuState::LOGGED_IN;
+                        /*                         catch (idnotfound ex)
+                        {
+                            cout << ex.what() <<endl ;
+                        } */
                         break;
                     }
                     case '2': {
@@ -141,8 +228,8 @@ int main(){
                         cin >> password;
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
-                        } catch (UserAlreadyExistsException e) {
-                            cout << "Error: username already exists";
+                        } catch (UserAlreadyExistsException ex) {
+                            cout << ex.error_text << endl ;
                         }
                         break;
                     }
