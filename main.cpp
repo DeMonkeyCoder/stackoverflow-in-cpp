@@ -20,37 +20,21 @@ enum UserType{
 
 class UserAlreadyExistsException //: public exception
 {
-//private:
-   // const char* error_text = "User Already Exist";
 public:
-   // const char* what()
-   // {
-    //    return error_text;
-   // }
   string error_text;
   UserAlreadyExistsException() : error_text("User Already Exists") {}
 
-}; //TODO: Give exceptions a better structure. search google (optional)
-class wrongpassword// : public exception
+}; 
+class wrongpassword
 {
-//private:
-  //  const char* error_text = "Incorrect Password";
-
 public:
     string error_text ;
     wrongpassword() : error_text("Incorrect Password"){}
 };
 
-class idnotfound //: public exception
+class idnotfound 
 {
-//private:
-  //  const char* error_text = "Username Not Found";
-
 public:
-   // const char* what()
-   // {
-   //     return error_text;
-   // }
   string error_text;
   idnotfound() : error_text("Id Not found") {}
 };
@@ -98,24 +82,9 @@ public:
     }
 
 
-    // static void check(vector<AbstractUser*> *users,string username)
-    // {
-    //     auto user = users->begin();
-    //     for (user ; user != users->end(); user++)
-    //     {
-    //         if((*user)->username == username)
-    //         break;
-    //     }
-    //     if(user==users->end()+1)
-    //     {
-    //         idnotfound ex;
-    //         throw ex;
-    //     }
-
-    // }
 
 
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
+    static User* login(vector<AbstractUser*> *users, string username, string password){ 
         for(auto user = users->begin(); user != users->end(); user++){
             if((*user)->authenticate(username, password)){
                 return (User*) *user;
@@ -180,23 +149,14 @@ int main(){
     while(menuState != MenuState::END){
         switch (menuState){
             case MenuState::START: {
-
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case '1': {
+                        system("clear");
                         string username, password;
                         cout << "Enter Username" << endl;
                         cin >> username;
-                        // try
-                        // {
-                        //     User::check(&appDatabase.appUsers, username);
-                        //     menuState = MenuState::LOGGED_IN;
-                        // }
-                        // catch(idnotfound ex)
-                        // {
-                        //     cout << ex.what() << endl;
-                        // }
                         cout << "Enter Password" << endl;
                         cin >> password;
                         try{
@@ -205,30 +165,32 @@ int main(){
                         }
                         catch(idnotfound ex)
                         {
+                            system("clear");
                             cout << ex.error_text << endl;
                             continue;
                         }
                         catch (wrongpassword ex)
                         {
+                            system("clear");
                             cout << ex.error_text << endl ;
                             continue;
                         }
                         menuState = MenuState::LOGGED_IN;
-                        /*                         catch (idnotfound ex)
-                        {
-                            cout << ex.what() <<endl ;
-                        } */
+
                         break;
                     }
                     case '2': {
                         string username, password;
+                        system("clear");
                         cout << "Enter Username" << endl;
                         cin >> username;
                         cout << "Enter Password" << endl;
                         cin >> password;
+                        system("clear");
                         try{
                             User::signup(&appDatabase.appUsers, username, password);
                         } catch (UserAlreadyExistsException ex) {
+                            system("clear");
                             cout << ex.error_text << endl ;
                         }
                         break;
@@ -241,20 +203,24 @@ int main(){
                         cout << "Unknown Input" << endl;
                     }
                 }
+                //system("clear");
                 break;
             }
             case MenuState::LOGGED_IN: {
+                system("clear");
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case 'd': {
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        system("clear");
+                        cout << "Account successfully deleted" << endl;
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
                     }
                     case 'l': {
+                        system("clear");
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;
