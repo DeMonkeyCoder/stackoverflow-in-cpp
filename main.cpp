@@ -3,17 +3,17 @@
 #include <string>
 #include <algorithm>
 #include <unistd.h>
+#include "md5.h"
 using namespace std;
 #define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
-/**
- * In the name of God
- * Homework 2
- * TODO: Complete this code using given TODO comments :). then remove TODOs
- * feel free to edit code as you want and make it better
- * Any questions? ask @devcom_support on telegram
- * Good luck!
- **/
+string md5_hash(string data) {
+	string data_hex_digest;
+	md5 hash;
+	hash.update(data.begin(), data.end());
+    hash.hex_digest(data_hex_digest);
+	return data_hex_digest;
+}
 
 enum UserType {
     ADMIN,
@@ -58,17 +58,20 @@ protected:
 };
 
 class User : public AbstractUser {
+private:
+    const string salt = "E1F53135E559C253";
 public:
     User(string username, string password, UserType type) {
         lower(username);
         this->username = username;
-        this->password = password;
+        this->password = md5_hash(username + password + this->salt);
         this->type = type;
     }
 
     bool authenticate(string username, string password) {
         lower(username);
-        return this->username == username and this->password == password;
+        string hashed_password = md5_hash(username + password + this->salt);
+        return this->username == username and this->password == hashed_password;
     }
 
     static User* login(vector<AbstractUser*> *users, string username, string password) {
