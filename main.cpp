@@ -20,22 +20,6 @@ enum UserType {
 };
 
 
-class UserAlreadyExistsException : public exception {
-public:
-	virtual const char* what() const throw()
-	{
-		return "Error: username already exists\n";
-	}
-};
-
-class UserNotExistException : public exception {
-public:
-	virtual const char* what() const throw()
-	{
-		return "couldn't login with given credentials.\n";
-	}
-};
-
 class UnknownInput : public exception {
 public:
 	virtual const char* what() const throw()
@@ -116,6 +100,113 @@ enum MenuState {
 
 class AppDatabase { //Just holds runtime data. doesn't save anything
 public:
+    vector<AbstractUser *> appUsers;
+    
+    AppDatabase() { //Load initial data
+        appUsers.push_back(new User("admin",
+                                    phash.doHash("admin") /* password is unsafe! for test only */,
+                                    UserType::ADMIN)
+                           );
+    }
+};
+
+int main(){
+    User * loggedInUser = nullptr;
+    AppDatabase appDatabase;
+    MenuState menuState = MenuState::START;
+    Users users(&appDatabase.appUsers);
+    char choice;
+    cout << "Welcome!" << endl;
+
+    while(menuState != MenuState::END){
+        switch (menuState){
+            case MenuState::START: {
+                
+                cout << "1. login\n2. signup\ne. exit\n";
+                cin >> choice;
+                switch(choice) {
+                    case '1': {
+                        string username, password;
+                        cout << "Enter Username" << endl;
+                        cin >> username;
+                        cout << "Enter Password" << endl;
+                        cin >> password;
+                        try{
+                            UserType userType = users.login(username, password);
+                            loggedInUser = new User(username, password, userType);
+                            menuState = MenuState::LOGGED_IN;
+                            cout << "\nWelcome! please choose:\n";
+                        }catch(UserNotFoundException e){
+                            cout << e.getMessage() << "\n\n";
+                        }
+                        break;
+                    }
+                    case '2': {
+                        string username, password;
+                        cout << "Enter Username" << endl;
+                        cin >> username;
+                        cout << "Enter Password" << endl;
+                        cin >> password;
+                        try{
+                            users.signup(username, password);
+                            cout << "you successfully registered. please login!\n\n";
+                        } catch (UserAlreadyExistsException e) {
+                            cout << e.getMessage() << "\n\n";
+                        }
+                        break;
+                    }
+                    case 'e': {
+                        cout << "\nGoodbye\n";
+                        menuState = MenuState::END;
+                        break;
+                    }
+                    default: {
+                        cout << "Unknown Input" << endl;
+                    }
+                }
+                break;
+            }
+            case MenuState::LOGGED_IN: {
+                cout << "d.delete account\nl. logout\ne. exit\n";
+                cin >> choice;
+                switch(choice) {
+                    case 'd': {
+                        try{
+                            loggedInUser->deleteAccount(&users);
+                            loggedInUser = nullptr;
+                            menuState = MenuState::START;
+                            cout << "Account successfully deleted\n\n";
+                        }catch(DeleteAccountException e){
+                            cout << e.getMessage() << "\n\n";
+                        }
+                        break;
+                    }
+                    case 'l': {
+                        loggedInUser = nullptr;
+                        menuState = MenuState::START;
+                        cout << "\nGoodbye\n\n";
+                        break;
+                    }
+                    case 'e': {
+                        menuState = MenuState::END;
+                        cout << "\nGoodbye\n";
+                        break;
+                    }
+                    default: {
+                        cout << "Unknown Input" << endl;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    
+    return 0;
+    
+}
+
+
+=======
 	vector<AbstractUser *> appUsers;
 
 	AppDatabase() { //Load initial data
