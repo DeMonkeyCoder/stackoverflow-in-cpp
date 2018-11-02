@@ -27,11 +27,6 @@ enum UserType {
 * Homework 2
 **/
 
-
-enum UserType {
-	ADMIN,
-	MEMBER
-};
 class AdminDeleteException{
 public:
     string msg;
@@ -43,11 +38,12 @@ public:
 
 class UserAlreadyExistsException : public exception {
 private:
-    const string message = "Error: username already exists!";
+    string message;
 public:
     const string what() {
         return message;
     }
+    UserAlreadyExistsException (const char * s)throw():message(s){};
 };
 
 class WrongUsernameOrPasswordException : public exception {
