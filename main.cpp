@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <functional>
+#include <sstream>
+#include <unistd.h>
 #include "myHash.h"
 #include <string>
 #include <algorithm>
@@ -8,6 +11,7 @@
 #include<stdlib.h>
 #include <string>
 #include <exception>
+
 using namespace std;
 #define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
@@ -36,16 +40,15 @@ public:
     }
 };
 
-class UserAlreadyExistsException : public exception {
-private:
-    string message;
+class UserAlreadyExistsException:public exception{
+    const char* message;
 public:
-    const string what() {
+    UserAlreadyExistsException (const char * s)throw():message(s){};
+    const char* what() const throw(){
         return message;
     }
-    UserAlreadyExistsException (const char * s)throw():message(s){};
-};
-
+}; 
+=======
 class WrongUsernameOrPasswordException : public exception {
 private:
     const string message = "Error: wrong username or password!";
@@ -64,11 +67,6 @@ public:
     }
 };
 
-class AbstractUser { // User structure
-public:
-    virtual bool authenticate(string username, string password) = 0;
-    virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
-    string username;
 class UserAlreadyExistsException:public exception{
     string msg;
     public:
@@ -88,6 +86,7 @@ public:
 
 class AbstractUser { // User structure
 public:
+  hash<string> pass_hash;
 	virtual bool authenticate(string username, string password) = 0;
 	virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
 	string username;
@@ -103,6 +102,38 @@ public:
     User(string username, string password, UserType type) {
         lower(username);
         this->username = username;
+        set_password(password);
+        this->type = type;
+    }
+    int check_password(string password){
+        hash<string> pass_hash_c;
+        long long check = pass_hash(password);
+        string a;
+        stringstream out;
+        out << check;
+        a = out.str();
+        return (this->password == a);
+    }
+    void set_password(string password){
+        long long ps = pass_hash(password);
+        string a;
+        stringstream out;
+        out << ps;
+        a = out.str();
+        this->password = a;
+    }
+    bool authenticate(string username, string password){
+        int ath1 = 0;
+        int ath2 = 0;
+        if (this->username == username){ath1++;}
+        if (check_password(password)){ath2++;}
+        if (ath1 == 1 && ath2 == 1){return 1;}
+        if (ath1 == 1 && ath2 == 0){throw 2;}  // we have username but the pass is incorrect  
+        if (ath1 == 0 && ath2 == 0){return 0;} 
+        return 0 ;
+    }
+
+    static User* login(vector<AbstractUser*> *users, string username, string password){ 
         this->password = md5_hash(username + password + this->salt);
         this->type = type;
     }
@@ -265,7 +296,9 @@ public:
 
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
-                                    "admin", /* password is unsafe! for test only */
+                                    "admin" /* password is unsafe! for test only */,
+                                    UserType::ADMIN)
+        );
     }
     
 };
@@ -302,6 +335,8 @@ int main() {
                 cin >> choice;
                 switch(choice) {
                     case '1': {
+                        printf("\033[H\033[J");
+                        cout << "Login Page\n" << endl;
                         string username, password;
                         cout << "\nEnter Username" << endl;
                         cin >> username;
@@ -345,6 +380,8 @@ int main() {
                     default: { // unknown input
                         last_message = "Unknown Input";
                     case '2': {
+                        printf("\033[H\033[J");
+                        cout << "SignUp Page\n" << endl;
                         string username, password;
                         cout << "Enter Username :" << endl;
                         cin >> username;
