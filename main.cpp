@@ -1,157 +1,353 @@
 #include <iostream>
 #include <vector>
 #include "myHash.h"
+#include <string>
+#include <algorithm>
+#include <unistd.h>
+#include "md5.h"
+#include<stdlib.h>
+#include <string>
+#include <exception>
 using namespace std;
+#define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
-/**
- * In the name of God
- * Homework 2
- * TODO: Complete this code using given TODO comments :). then remove TODOs
- * feel free to edit code as you want and make it better
- * Any questions? ask @devcom_support on telegram
- * Good luck!
- **/
+string md5_hash(string data) {
+	string data_hex_digest;
+	md5 hash;
+	hash.update(data.begin(), data.end());
+    hash.hex_digest(data_hex_digest);
+	return data_hex_digest;
+}
 
-enum UserType{
+enum UserType {
     ADMIN,
     MEMBER
+/**
+* In the name of God
+* Homework 2
+**/
+
+
+enum UserType {
+	ADMIN,
+	MEMBER
+};
+class AdminDeleteException{
+public:
+    string msg;
+    AdminDeleteException(string text=string("ADMIN CANT BE DELETED!!!\n"))
+    {
+        msg=text;
+    }
 };
 
-class UserSignUpException: public exception{
-    const char* message;
+class UserAlreadyExistsException : public exception {
+private:
+    const string message = "Error: username already exists!";
 public:
-    UserSignUpException(const char* message){
-        this->message = message;
-    };
-    const char* what() const throw(){
+    const string what() {
         return message;
     }
 };
 
-class UserLoginException: public exception{
-    const char* message;
+class WrongUsernameOrPasswordException : public exception {
+private:
+    const string message = "Error: wrong username or password!";
 public:
-    UserLoginException(const char* message){
-        this->message = message;
-    };
-    const char* what() const throw(){
+    const string what() {
         return message;
     }
 };
 
-class AbstractUser{ // User structure
+class DeleteAdminException : public exception {
+private:
+    const string message = "Error: can't delete admin account!";
+public:
+    const string what() {
+        return message;
+    }
+};
+
+class AbstractUser { // User structure
 public:
     virtual bool authenticate(string username, string password) = 0;
     virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
     string username;
-protected:
-    string password;
-    UserType type;
+class UserAlreadyExistsException:public exception{
+    string msg;
+    public:
+        UserAlreadyExistsException(const string msg):msg(msg){}
+        virtual const void what(){
+            std:cout<<endl<<msg<<endl;
+        }
 };
 
-class User : public AbstractUser{
+class UnknownInput : public exception {
 public:
-    
-    User(string username, string password, UserType type){
+	virtual const char* what() const throw()
+	{
+		return "Unknown Input\n";
+	}
+};
+
+class AbstractUser { // User structure
+public:
+	virtual bool authenticate(string username, string password) = 0;
+	virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
+	string username;
+protected:
+	string password;
+	UserType type;
+};
+
+class User : public AbstractUser {
+private:
+    const string salt = "E1F53135E559C253";
+public:
+    User(string username, string password, UserType type) {
+        lower(username);
         this->username = username;
-        this->password = md5(password);
+        this->password = md5_hash(username + password + this->salt);
         this->type = type;
     }
-    
-    bool authenticate(string username, string password){
-        return this->username == username && this->password == md5(password);
+
+    bool authenticate(string username, string password) {
+        lower(username);
+        string hashed_password = md5_hash(username + password + this->salt);
+        return this->username == username and this->password == hashed_password;
     }
-    
-    void deleteAccount(vector<AbstractUser*> *users){
-        for (auto user = users->begin(); user != users->end(); user++) {
-            if ((*user) == this) {
-                users->erase(user);
-                break;
-            }
-        }
-    }
-    
-    static User* login(vector<AbstractUser*> *users, string username, string password){ //TODO: 2. handle user login errors with exceptions
-        int usrname=0;
-        for(auto user = users->begin(); user != users->end(); user++){
-            if((*user)->authenticate(username, password)){
+
+    static User* login(vector<AbstractUser*> *users, string username, string password) {
+        for(auto user = users->begin(); user != users->end(); user++) {
+            if((*user)->authenticate(username, password)) {
                 return (User*) *user;
             }
-            if ((*user)->username == username) {
-                usrname = 1;
-            }
         }
-        if (!usrname) {
-            throw UserLoginException("Error: username not found!");
-        }
-        else if(usrname) {
-            throw UserLoginException("Error: password is not correct");
-        }
-        else{
-            throw UserLoginException("Error: User not found!");
-        }
+        WrongUsernameOrPasswordException ex;
+        throw ex;
     }
-    
-    static void signup(vector<AbstractUser*> *users, string username, string password){
-        
-        //Check if user with that username exists and throw UserAlreadyExistsException in that case
+
+    static void signup(vector<AbstractUser*> *users, string username, string password) {
         for(auto user = users->begin(); user != users->end(); user++) {
-            if ((*user)->username == username) {
-                const char * exceptionMessage = "Error: user already exsit!";
-                UserSignUpException ex(exceptionMessage);
+            if((*user)->username == username) {
+                UserAlreadyExistsException ex;
                 throw ex;
             }
         }
         //Create user and add it to vector
         users->push_back(new User(username, password, UserType::MEMBER));
+
+class User : public AbstractUser {
+public:
+    
+    bool deleteAccount(vector<AbstractUser*> *users){
+        for(auto user = users->begin(); user != users->end(); user++) {
+            if(this->type==ADMIN){break;}
+            if((*user)->authenticate(this->username, this->password)){
+                users->erase(user);
+                return 1;
+                break;
+            }
+        }
+        UserAlreadyExistsException ex("This user is not successfully deleted");
+        throw ex;                                                         
+        return 0;
+    }
+
+	User(string username, string password, UserType type) {
+		this->username = username;
+		this->password = password;
+		this->type = type;
+	}
+
+	bool authenticate(string username, string password) {
+		return this->username == username && this->password == password;
+	}
+
+    bool CheckPass(string pass){
+        return this->password == password;
+    }
+
+    static User* login(vector<AbstractUser*> *users, string username, string password){
+        for(auto user = users->begin(); user != users->end(); user++){
+            if((*user)->authenticate(username, password)){
+                return (User*) *user;
+            }
+        }
+        UserAlreadyExistsException ex("Your username or Your password is incorrect");
+        throw ex;
+        return nullptr;
+    }
+    
+    static void signup(vector<AbstractUser*> *users, string username, string password){
+        for(auto user = users->begin(); user != users->end(); user++) { 
+            if ((*user)->username == username) {
+                throw UserAlreadyExistsException(username);
+                UserAlreadyExistsException ex("Error: username already exists");
+                throw ex;
+            }
+        }
+    }
+	static User* login(vector<AbstractUser*> *users, string username, string password) {
+		for (auto user = users->begin(); user != users->end(); user++) {
+			if ((*user)->authenticate(username, password)) {
+				return (User*)*user;
+			}
+		}
+		UserNotExistException ex;
+		throw ex;
+	}
+
+    bool deleteAccount(vector<AbstractUser*> *users)
+    {
+        if(this ==*(users->begin()))
+            throw AdminDeleteException();
+        for(auto user = users->begin(); user!= users->end();user++)
+            if((*user) == this)
+                {
+                    users->erase(user);
+                    delete this;
+                    return 1;
+                }
+	void deleteAccount(vector<AbstractUser*> *users)
+	{
+		//Check if user with this username exists to erase or not. if not throw an exception.
+		//It only checks the username because password is a private field in AbstractUser class
+		//and it is said not to change AbstractUser class AT ALL!
+		for (auto user = users->begin(); user != users->end(); user++) {
+			if ((*user)->username == username) {
+				user = find(users->begin(), users->end(), this);
+				users->erase(user);										//Delete this user from the list of users
+				return;
+			}
+		}
+		UserAlreadyExistsException ex;
+		throw ex;
+	}
+
+	static void signup(vector<AbstractUser*> *users, string username, string password) {
+
+    void deleteAccount(vector<AbstractUser*> *users) {
+        if(this->type == UserType::ADMIN) {
+            DeleteAdminException ex;
+            throw ex;
+        }
+        for(auto user = users->begin(); user != users->end(); user++) {
+            if((*user)->username == this->username) {
+                users->erase(user);
+                break;
+            }
+        }
     }
 };
 
-enum MenuState{
+enum MenuState {
     START,
     LOGGED_IN,
     END
+		for (auto user = users->begin(); user != users->end(); user++) {
+			if ((*user)->username == username) {
+				UserAlreadyExistsException ex;
+				throw ex;
+			}
+		}
+
+		//Create user and add it to vector
+		users->push_back(new User(username, password, UserType::MEMBER));
+	}
+};
+
+enum MenuState {
+	START,
+	LOGGED_IN,
+	END
 };
 
 class AppDatabase { //Just holds runtime data. doesn't save anything
 public:
-    vector<AbstractUser *> appUsers;
+    vector<AbstractUser*> appUsers;
+
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
-                                    "admin" /* password is unsafe! for test only */,
-                                    UserType::ADMIN));
+                                    "admin", /* password is unsafe! for test only */
     }
     
 };
 
-int main(){
+int main() {
     User * loggedInUser = nullptr;
     AppDatabase appDatabase;
     MenuState menuState = MenuState::START;
-    
+    string last_message = "";
+    Users users(&appDatabase.appUsers);
     char choice;
-    cout << "Welcome!" << endl;
-    
-    while(menuState != MenuState::END){
-        switch (menuState){
+    while(menuState != MenuState::END) {
+        switch(menuState){
             case MenuState::START: {
+                system("clear");
+                if(last_message != "")
+                    cout << last_message << endl;
+                last_message = "";
+                cout << "1. login\n2. signup\ne. exit\n";
+                cin >> choice;
+                switch(choice) {
+                    case '1': { // login
+                        string username;
+                        cout << "Enter Username: ";
+                        cin >> username;
+                        char* pass = getpass("Enter password: ");
+                        string password(pass);
+                        try {
+                            loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        } catch(WrongUsernameOrPasswordException e) {
+                            last_message = e.what();
+                            break;
                 cout << "1. login\n2. signup\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
                     case '1': {
                         string username, password;
-                        cout << "Enter Username :" << endl;
+                        cout << "\nEnter Username" << endl;
                         cin >> username;
-                        cout << "Enter Password :" << endl;
+                        cout << "\nEnter Password" << endl;
                         cin >> password;
-                        try {
+                        try{
                             loggedInUser = User::login(&appDatabase.appUsers, username, password);
+                        }
+                        catch(UserAlreadyExistsException e){
+                            e.what();
+                            loggedInUser = nullptr;
+                        }
+                        if (loggedInUser != nullptr) {
+                            UserType userType = users.login(username, password);
+                            loggedInUser = new User(username, password, userType);
                             menuState = MenuState::LOGGED_IN;
-                        } catch (UserLoginException& exp) {
-                            cout << exp.what() << endl;
+                            cout << "\nWelcome! please choose:\n";
+                        }catch(UserNotFoundException e){
+                            cout << e.getMessage() << "\n\n";
+                        }
+                        menuState = MenuState::LOGGED_IN;
+                        break;
+                    }
+                    case '2': { // signup
+                        string username;
+                        cout << "Enter Username: ";
+                        cin >> username;
+                        char* pass = getpass("Enter password: ");
+                        string password(pass);
+                        try {
+                            User::signup(&appDatabase.appUsers, username, password);
+                        } catch (UserAlreadyExistsException e) {
+                            last_message = e.what();
                         }
                         break;
                     }
+                    case 'e': { // exit
+                        menuState = MenuState::END;
+                        break;
+                    }
+                    default: { // unknown input
+                        last_message = "Unknown Input";
                     case '2': {
                         string username, password;
                         cout << "Enter Username :" << endl;
@@ -166,45 +362,85 @@ int main(){
                         break;
                     }
                     case 'e': {
+                        cout << "\nGoodbye\n";
                         menuState = MenuState::END;
                         break;
                     }
                     default: {
-                        cout << "Unknown Input!" << endl;
+                        cout << "\nUnknown Input" << endl;
                     }
                 }
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d. delete account\nl. logout\ne. exit\n";
+                system("clear");
+                if(last_message != "")
+                    cout << last_message << endl;
+                last_message = "";
+                cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
-                    case 'd': {
+                    case 'd': {try{
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
                         cout << "Account successfully deleted!\n";
                         loggedInUser = nullptr;
-                        menuState = MenuState::START;
-                        break;
-                    }
-                    case 'l': {
+                        menuState = MenuState::START;}
+                        catch(AdminDeleteException e)
+                        {cout << e.msg << endl;}
+                    case 'd': { // delete account
+                        try {
+                            loggedInUser->deleteAccount(&appDatabase.appUsers);
+                        } catch(DeleteAdminException e) {
+                            last_message = e.what();
+                            break;
+                        }
+                        last_message = "Account successfully deleted";
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
+                cout << "\nd.delete account\nl. logout\ne. exit\n";
+                cin >> choice;
+                switch(choice) {
+                    case 'd': {
+                        try{
+                            loggedInUser->deleteAccount(&appDatabase.appUsers);
+                            cout << "\nAccount successfully deleted";
+                            loggedInUser = nullptr;
+                            menuState = MenuState::START;
+                            break;
+                        }
+                        catch(UserAlreadyExistsException e){
+                            e.what();
+                        }
+                            loggedInUser->deleteAccount(&users);
+                            loggedInUser = nullptr;
+                            menuState = MenuState::START;
+                            cout << "Account successfully deleted\n\n";
+                        }catch(DeleteAccountException e){
+                            cout << e.getMessage() << "\n\n";
+                        }
                         break;
                     }
-                    case 'e': {
+                    case 'l': { // logout
+                        loggedInUser = nullptr;
+                        menuState = MenuState::START;
+                        cout << "\nGoodbye\n\n";
+                        break;
+                    }
+                    case 'e': { // exit
                         menuState = MenuState::END;
+                        cout << "\nGoodbye\n";
                         break;
                     }
+                    default: { // unknown input
+                        last_message = "Unknown Input";
                     default: {
-                        cout << "Unknown Input" << endl;
+                        cout << "\nUnknown Input" << endl;
                     }
                 }
                 break;
             }
         }
     }
+    
     return 0;
 }
-
-
-
