@@ -12,8 +12,12 @@
 #include <string>
 #include <exception>
 
+
 using namespace std;
 #define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
+
+#define Clear system("cls ");
+#define Pause cout<< "Press any key to continue . . ." << endl; clean();
 
 string md5_hash(string data) {
 	string data_hex_digest;
@@ -302,6 +306,38 @@ public:
     }
     
 };
+
+string getpass(){
+	const char BACKSPACE = 8;
+	const char RETURN = 13;
+
+	string password;
+	unsigned char ch = 0;
+
+
+	DWORD con_mode;
+	DWORD dwRead;
+
+	HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+
+	GetConsoleMode(hIn, &con_mode);
+	SetConsoleMode(hIn, con_mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
+
+	while (ReadConsoleA(hIn, &ch, 1, &dwRead, NULL) && ch != RETURN){
+		if (ch == BACKSPACE){
+			if (password.length() != 0){
+				cout << "\b \b";
+				password.resize(password.length() - 1);
+			}
+		}
+		else{
+			password += ch;
+			cout << '*';
+		}
+	}
+	cout << endl;
+	return password;
+}
 
 int main() {
     User * loggedInUser = nullptr;
