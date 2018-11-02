@@ -31,6 +31,14 @@ enum UserType {
 	ADMIN,
 	MEMBER
 };
+class AdminDeleteException{
+public:
+    string msg;
+    AdminDeleteException(string text=string("ADMIN CANT BE DELETED!!!\n"))
+    {
+        msg=text;
+    }
+};
 
 class UserAlreadyExistsException : public exception {
 private:
@@ -174,6 +182,7 @@ public:
         
         for(auto user = users->begin(); user != users->end(); user++) { 
             if ((*user)->username == username) {
+                throw UserAlreadyExistsException(username);
                 UserAlreadyExistsException ex("Error: username already exists");
                 throw ex;
             }
@@ -189,6 +198,17 @@ public:
 		throw ex;
 	}
 
+    bool deleteAccount(vector<AbstractUser*> *users)
+    {
+        if(this ==*(users->begin()))
+            throw AdminDeleteException();
+        for(auto user = users->begin(); user!= users->end();user++)
+            if((*user) == this)
+                {
+                    users->erase(user);
+                    delete this;
+                    return 1;
+                }
 	void deleteAccount(vector<AbstractUser*> *users)
 	{
 		//Check if user with this username exists to erase or not. if not throw an exception.
@@ -344,6 +364,7 @@ int main() {
                             users.signup(username, password);
                             cout << "you successfully registered. please login!\n\n";
                         } catch (UserAlreadyExistsException e) {
+                            cout << e.msg <<endl;
                             cout << e.getMessage() << "\n\n";
                         }
                         break;
@@ -367,6 +388,13 @@ int main() {
                 cout << "d.delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch(choice) {
+                    case 'd': {try{
+                        loggedInUser->deleteAccount(&appDatabase.appUsers);
+                        cout << "Account successfully deleted";
+                        loggedInUser = nullptr;
+                        menuState = MenuState::START;}
+                        catch(AdminDeleteException e)
+                        {cout << e.msg << endl;}
                     case 'd': { // delete account
                         try {
                             loggedInUser->deleteAccount(&appDatabase.appUsers);
