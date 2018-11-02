@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "myHash.h"
 #include <string>
 #include <algorithm>
 #include <unistd.h>
@@ -177,9 +178,8 @@ public:
         throw ex;
         return nullptr;
     }
-
+    
     static void signup(vector<AbstractUser*> *users, string username, string password){
-        
         for(auto user = users->begin(); user != users->end(); user++) { 
             if ((*user)->username == username) {
                 throw UserAlreadyExistsException(username);
@@ -270,14 +270,8 @@ public:
     AppDatabase() { //Load initial data
         appUsers.push_back(new User("admin",
                                     "admin", /* password is unsafe! for test only */
-    vector<AbstractUser *> appUsers;
-    
-    AppDatabase() { //Load initial data
-        appUsers.push_back(new User("admin",
-                                    phash.doHash("admin") /* password is unsafe! for test only */,
-                                    UserType::ADMIN)
-                           );
     }
+    
 };
 
 int main() {
@@ -356,16 +350,14 @@ int main() {
                         last_message = "Unknown Input";
                     case '2': {
                         string username, password;
-                        cout << "\nEnter Username" << endl;
+                        cout << "Enter Username :" << endl;
                         cin >> username;
-                        cout << "\nEnter Password" << endl;
+                        cout << "Enter Password :" << endl;
                         cin >> password;
                         try{
-                            users.signup(username, password);
-                            cout << "you successfully registered. please login!\n\n";
-                        } catch (UserAlreadyExistsException e) {
-                            cout << e.msg <<endl;
-                            cout << e.getMessage() << "\n\n";
+                            User::signup(&appDatabase.appUsers, username, password);
+                        } catch (UserSignUpException& e) {
+                            cout << e.what() <<endl;
                         }
                         break;
                     }
@@ -390,7 +382,7 @@ int main() {
                 switch(choice) {
                     case 'd': {try{
                         loggedInUser->deleteAccount(&appDatabase.appUsers);
-                        cout << "Account successfully deleted";
+                        cout << "Account successfully deleted!\n";
                         loggedInUser = nullptr;
                         menuState = MenuState::START;}
                         catch(AdminDeleteException e)
