@@ -5,6 +5,8 @@
 #include <sstream>
 #include "User.h"
 #include "Exceptions.h"
+#include <iostream>
+
 using namespace Exceptions;
 
 User::User(string username, string password, UserType type){
@@ -34,21 +36,21 @@ bool User::authenticate(string username, string password){
     lower(username);
     return this->username == username and check_password(password);
 }
-void User::deleteAccount(vector<AbstractUser*> *users){
+void User::deleteAccount(){
     if (this->type == UserType::ADMIN) {
         DeleteAdminException ex;
         throw ex;
     }
 
-    for (auto user = users->begin(); user != users->end();user++){
-        if ((*user)->username == this->username) {
-            users->erase(user);
+    for (auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end();user++){
+        if ( (*user)->username == this->username  ) {
+            appDatabase.appDatas.erase(user);
             break;
         }
     }
 }
-User* User::login(vector<AbstractUser*> *users, string username, string password){
-    for(auto user = users->begin(); user != users->end(); user++) {
+User* User::login(string username, string password){
+    for(auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end(); user++) {
         if((*user)->authenticate(username, password)) {
             return (User*) *user;
         }
@@ -56,13 +58,13 @@ User* User::login(vector<AbstractUser*> *users, string username, string password
     WrongUsernameOrPasswordException ex;
     throw ex;
 }
-void User::signup(vector<AbstractUser*> *users, string username, string password){
-    for (auto user = users->begin(); user != users->end(); user++) {
+void User::signup(string username, string password){
+    for (auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end(); user++) {
         if ((*user)->username == username) {
             UserAlreadyExistsException ex;
             throw ex;
         }
     }
     //Create user and add it to vector
-    users->push_back(new User(username, password, UserType::MEMBER));
+    appDatabase.appDatas.push_back(new User(username, password, UserType::MEMBER));
 }
