@@ -39,30 +39,31 @@ enum UserType {
 
 
 class UserAlreadyExistsException:public exception{
-    string message;
 public:
-    UserAlreadyExistsException (string s)throw():message(s){};
     const char* what() const throw(){
         return message.c_str();
     }
+private:
+    const string message = "Error: User already exists";
 };
 
 class WrongUsernameOrPasswordException : public exception {
 private:
     const string message = "Error: wrong username or password!";
 public:
-    const string what() {
-        return message;
+    const char*  what() const throw (){
+        return message.c_str();
     }
 };
 
 class DeleteAdminException : public exception {
+public:
+    const char*  what() throw(){
+        return message.c_str();
+    }
 private:
     const string message = "Error: can't delete admin account!";
-public:
-    const string what() {
-        return message;
-    }
+
 };
 
 
