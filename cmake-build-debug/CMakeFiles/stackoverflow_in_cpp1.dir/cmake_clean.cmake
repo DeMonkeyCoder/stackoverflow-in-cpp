@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/stackoverflow_in_cpp1.dir/main.cpp.o"
   "CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.o"
+  "CMakeFiles/stackoverflow_in_cpp1.dir/Utils.cpp.o"
   "stackoverflow_in_cpp1.pdb"
   "stackoverflow_in_cpp1"
 )
