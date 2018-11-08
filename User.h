@@ -6,6 +6,7 @@
 #define STACKOVERFLOW_IN_CPP1_USER_H
 
 #include "AbstractUser.h"
+#include "AppDatabase.h"
 
 class User : public AbstractUser {
 public:
@@ -16,13 +17,16 @@ public:
 
 public:
     bool authenticate(string username, string password);
-    void deleteAccount(vector<AbstractUser*> *users);
+    void deleteAccount();
 
 public:
-    static User* login(vector<AbstractUser*> *users, string username, string password);
-    static void signup(vector<AbstractUser*> *users, string username, string password);
+    static User* login(string username, string password);
+    static void signup(string username, string password);
+
 private:
     const string salt = "E1F53135E559C253";
+    static AppDatabase<User> appDatabase;
+
 };
 
 #endif //STACKOVERFLOW_IN_CPP1_USER_H
