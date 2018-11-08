@@ -1,0 +1,14 @@
+//
+// Created by spsina on 11/8/18.
+//
+
+#ifndef STACKOVERFLOW_IN_CPP1_APPDATABASE_H
+#define STACKOVERFLOW_IN_CPP1_APPDATABASE_H
+
+
+class AppDatabase {
+
+};
+
+
+#endif //STACKOVERFLOW_IN_CPP1_APPDATABASE_H

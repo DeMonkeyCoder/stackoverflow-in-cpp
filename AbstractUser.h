@@ -19,7 +19,7 @@ class AbstractUser {
 public:
     hash<string> pass_hash;
     virtual bool authenticate(string username, string password) = 0;
-    virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
+    virtual void deleteAccount() = 0;
     string username;
 protected:
     string password;
