@@ -16,12 +16,9 @@
 using namespace std;
 #define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
 
-#define Clear system("cls ");
-#define Pause cout<< "Press any key to continue . . ." << endl; clean();
-
 string md5_hash(string data) {
 	string data_hex_digest;
-	md5 hash;
+	class md5 hash;
 	hash.update(data.begin(), data.end());
     hash.hex_digest(data_hex_digest);
 	return data_hex_digest;
@@ -30,29 +27,26 @@ string md5_hash(string data) {
 enum UserType {
     ADMIN,
     MEMBER
+};
 /**
 * In the name of God
 * Homework 2
 **/
 
-class AdminDeleteException{
+
+
+// todo: admin delete exception
+
+
+class UserAlreadyExistsException:public exception{
+    string message;
 public:
-    string msg;
-    AdminDeleteException(string text=string("ADMIN CANT BE DELETED!!!\n"))
-    {
-        msg=text;
+    UserAlreadyExistsException (string s)throw():message(s){};
+    const char* what() const throw(){
+        return message.c_str();
     }
 };
 
-class UserAlreadyExistsException:public exception{
-    const char* message;
-public:
-    UserAlreadyExistsException (const char * s)throw():message(s){};
-    const char* what() const throw(){
-        return message;
-    }
-}; 
-=======
 class WrongUsernameOrPasswordException : public exception {
 private:
     const string message = "Error: wrong username or password!";
@@ -71,26 +65,10 @@ public:
     }
 };
 
-class UserAlreadyExistsException:public exception{
-    string msg;
-    public:
-        UserAlreadyExistsException(const string msg):msg(msg){}
-        virtual const void what(){
-            std:cout<<endl<<msg<<endl;
-        }
-};
-
-class UnknownInput : public exception {
-public:
-	virtual const char* what() const throw()
-	{
-		return "Unknown Input\n";
-	}
-};
 
 class AbstractUser { // User structure
 public:
-  hash<string> pass_hash;
+    hash<string> pass_hash;
 	virtual bool authenticate(string username, string password) = 0;
 	virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
 	string username;

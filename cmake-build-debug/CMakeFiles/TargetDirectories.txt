@@ -1,0 +1,3 @@
+/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/stackoverflow_in_cpp1.dir
