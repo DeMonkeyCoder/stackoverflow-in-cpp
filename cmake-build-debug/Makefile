@@ -123,6 +123,33 @@ stackoverflow_in_cpp1/fast:
 	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/build
 .PHONY : stackoverflow_in_cpp1/fast
 
+User.o: User.cpp.o
+
+.PHONY : User.o
+
+# target to build an object file
+User.cpp.o:
+	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.o
+.PHONY : User.cpp.o
+
+User.i: User.cpp.i
+
+.PHONY : User.i
+
+# target to preprocess a source file
+User.cpp.i:
+	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.i
+.PHONY : User.cpp.i
+
+User.s: User.cpp.s
+
+.PHONY : User.s
+
+# target to generate assembly for a file
+User.cpp.s:
+	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.s
+.PHONY : User.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... stackoverflow_in_cpp1"
+	@echo "... User.o"
+	@echo "... User.i"
+	@echo "... User.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

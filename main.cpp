@@ -5,142 +5,19 @@
 #include <unistd.h>
 #include "myHash.h"
 #include <string>
-#include <algorithm>
 #include <unistd.h>
 #include "md5.h"
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string>
-#include <exception>
-
+#include "AbstractUser.h"
+#include "Exceptions.h"
+#include "User.h"
 
 using namespace std;
-#define lower(str) transform(str.begin(), str.end(), str.begin(), ::tolower)
-
-string md5_hash(string data) {
-	string data_hex_digest;
-	class md5 hash;
-	hash.update(data.begin(), data.end());
-    hash.hex_digest(data_hex_digest);
-	return data_hex_digest;
-}
-
-enum UserType {
-    ADMIN,
-    MEMBER
-};
-/**
-* In the name of God
-* Homework 2
-**/
+using namespace Exceptions;
 
 
-class UserAlreadyExistsException:public exception{
-public:
-    const char* what() const throw(){
-        return message.c_str();
-    }
-private:
-    const string message = "Error: User already exists";
-};
 
-class WrongUsernameOrPasswordException : public exception {
-private:
-    const string message = "Error: wrong username or password!";
-public:
-    const char*  what() const throw (){
-        return message.c_str();
-    }
-};
-
-class DeleteAdminException : public exception {
-public:
-    const char*  what() throw(){
-        return message.c_str();
-    }
-private:
-    const string message = "Error: can't delete admin account!";
-
-};
-
-
-class AbstractUser { // User structure
-public:
-    hash<string> pass_hash;
-	virtual bool authenticate(string username, string password) = 0;
-	virtual void deleteAccount(vector<AbstractUser*> *users) = 0;
-	string username;
-protected:
-	string password;
-	UserType type;
-};
-
-class User : public AbstractUser {
-private:
-    const string salt = "E1F53135E559C253";
-public:
-    User(string username, string password, UserType type) {
-        lower(username);
-        this->username = username;
-        set_password(password);
-        this->type = type;
-    }
-    void set_password(string password){
-        long long ps = pass_hash(password);
-        string a;
-        stringstream out;
-        out << ps;
-        a = out.str();
-        this->password = a;
-    }
-
-    bool check_password(string password){
-        hash<string> pass_hash_c;
-        long long check = pass_hash(password);
-        string a;
-        stringstream out;
-        out << check;
-        a = out.str();
-        return (this->password == a);
-    }
-    bool authenticate(string username, string password) {
-        lower(username);
-        return this->username == username and check_password(password);
-    }
-    void deleteAccount(vector<AbstractUser*> *users){
-        if (this->type == UserType::ADMIN) {
-            DeleteAdminException ex;
-            throw ex;
-        }
-
-        for (auto user = users->begin(); user != users->end();user++){
-            if ((*user)->username == this->username) {
-                users->erase(user);
-                break;
-            }
-        }
-    }
-
-    static User* login(vector<AbstractUser*> *users, string username, string password) {
-        for(auto user = users->begin(); user != users->end(); user++) {
-            if((*user)->authenticate(username, password)) {
-                return (User*) *user;
-            }
-        }
-        WrongUsernameOrPasswordException ex;
-        throw ex;
-    }
-
-    static void signup(vector<AbstractUser*> *users, string username, string password) {
-        for (auto user = users->begin(); user != users->end(); user++) {
-            if ((*user)->username == username) {
-                UserAlreadyExistsException ex;
-                throw ex;
-            }
-        }
-        //Create user and add it to vector
-        users->push_back(new User(username, password, UserType::MEMBER));
-    }
-};
 
 enum MenuState {
     START,
