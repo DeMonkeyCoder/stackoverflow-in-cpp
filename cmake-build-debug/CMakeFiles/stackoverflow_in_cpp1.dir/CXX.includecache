@@ -14,10 +14,6 @@ string
 vector
 -
 
-/home/spsina/CLionProjects/stackoverflow-in-cpp/AppDatabase.h
-vector
--
-
 /home/spsina/CLionProjects/stackoverflow-in-cpp/Exceptions.h
 exception
 -
@@ -37,34 +33,4 @@ iostream
 /home/spsina/CLionProjects/stackoverflow-in-cpp/User.h
 AbstractUser.h
 /home/spsina/CLionProjects/stackoverflow-in-cpp/AbstractUser.h
-AppDatabase.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/AppDatabase.h
-
-/home/spsina/CLionProjects/stackoverflow-in-cpp/Utils.cpp
-Utils.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/Utils.h
-iostream
--
-string
--
-User.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/User.h
-
-/home/spsina/CLionProjects/stackoverflow-in-cpp/Utils.h
-User.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/User.h
-
-/home/spsina/CLionProjects/stackoverflow-in-cpp/main.cpp
-iostream
--
-string
--
-AbstractUser.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/AbstractUser.h
-Exceptions.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/Exceptions.h
-User.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/User.h
-AppDatabase.h
-/home/spsina/CLionProjects/stackoverflow-in-cpp/AppDatabase.h
 

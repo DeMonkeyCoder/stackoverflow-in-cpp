@@ -84,15 +84,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/AbstractUser.h">
-			<Option target="stackoverflow_in_cpp1"/>
-		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/AppDatabase.h">
-			<Option target="stackoverflow_in_cpp1"/>
-		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/Exceptions.h">
-			<Option target="stackoverflow_in_cpp1"/>
-		</Unit>
 		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/User.cpp">
 			<Option target="stackoverflow_in_cpp1"/>
 		</Unit>

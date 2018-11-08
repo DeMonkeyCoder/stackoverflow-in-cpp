@@ -6,7 +6,6 @@
 #define STACKOVERFLOW_IN_CPP1_USER_H
 
 #include "AbstractUser.h"
-#include "AppDatabase.h"
 
 class User : public AbstractUser {
 public:
@@ -25,7 +24,7 @@ public:
 
 private:
     const string salt = "E1F53135E559C253";
-    static AppDatabase<User> appDatabase;
+    static vector<User*> appDatabase;
 
 };
 

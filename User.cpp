@@ -9,6 +9,8 @@
 
 using namespace Exceptions;
 
+vector<User*> User::appDatabase;
+
 User::User(string username, string password, UserType type){
     lower(username);
     this->username = username;
@@ -42,15 +44,15 @@ void User::deleteAccount(){
         throw ex;
     }
 
-    for (auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end();user++){
+    for (auto user = appDatabase.begin(); user != appDatabase.end();user++){
         if ( (*user)->username == this->username  ) {
-            appDatabase.appDatas.erase(user);
+            appDatabase.erase(user);
             break;
         }
     }
 }
 User* User::login(string username, string password){
-    for(auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end(); user++) {
+    for(auto user = appDatabase.begin(); user != appDatabase.end(); user++) {
         if((*user)->authenticate(username, password)) {
             return (User*) *user;
         }
@@ -59,12 +61,12 @@ User* User::login(string username, string password){
     throw ex;
 }
 void User::signup(string username, string password){
-    for (auto user = appDatabase.appDatas.begin(); user != appDatabase.appDatas.end(); user++) {
+    for (auto user = appDatabase.begin(); user != appDatabase.end(); user++) {
         if ((*user)->username == username) {
             UserAlreadyExistsException ex;
             throw ex;
         }
     }
     //Create user and add it to vector
-    appDatabase.appDatas.push_back(new User(username, password, UserType::MEMBER));
+    appDatabase.push_back(new User(username, password, UserType::MEMBER));
 }

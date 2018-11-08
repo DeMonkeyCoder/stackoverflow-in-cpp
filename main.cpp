@@ -3,7 +3,6 @@
 #include "AbstractUser.h"
 #include "Exceptions.h"
 #include "User.h"
-#include "AppDatabase.h"
 #include "Utils.h"
 using namespace std;
 using namespace Exceptions;
