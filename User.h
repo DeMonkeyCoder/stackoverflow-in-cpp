@@ -28,7 +28,7 @@ public:
 
 private:
     static string salt;
-    static vector<User> appDatabase;
+    static vector<User> users;
 
 };
 

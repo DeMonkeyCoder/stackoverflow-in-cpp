@@ -10,7 +10,7 @@
 #include <iostream>
 
 
-vector<User> User::appDatabase;
+vector<User> User::users;
 string User::salt;
 
 
@@ -44,16 +44,16 @@ void User::deleteAccount(){
         throw DeleteAdminException();
     }
 
-    for (auto user = appDatabase.begin(); user != appDatabase.end();user++){
+    for (auto user = users.begin(); user != users.end();user++){
         if ( user->username == this->username  ) {
-            appDatabase.erase(user);
+            users.erase(user);
             break;
         }
     }
 }
 
 User& User::login(string username, string password){
-    for (auto &user : appDatabase) {
+    for (auto &user : users) {
         if(user.authenticate(username, password)) {
             return user;
         }
@@ -62,17 +62,17 @@ User& User::login(string username, string password){
 }
 
 User& User::signup(string username, string password){
-    for (auto &user : appDatabase) {
+    for (auto &user : users) {
         if (user.username == username) {
             throw UserAlreadyExistsException();
         }
     }
     //Create user
-    appDatabase.emplace_back(username, password, UserType::MEMBER);
-    return appDatabase[appDatabase.size() - 1];
+    users.emplace_back(username, password, UserType::MEMBER);
+    return users[users.size() - 1];
 }
 
 void User::init(const string &salt) {
     User::salt = salt;
-    appDatabase.reserve(20);
+    users.reserve(20);
 }
