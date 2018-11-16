@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/main.cpp.dir/main.cpp.o CMakeFiles/main.cpp.dir/User.cpp.o  -o main.cpp 
