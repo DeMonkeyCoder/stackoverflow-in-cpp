@@ -75,4 +75,5 @@ User& User::signup(string username, string password){
 void User::init(const string &salt) {
     User::salt = salt;
     users.reserve(20);
+    users.emplace_back("admin", "admin", UserType::ADMIN);
 }
