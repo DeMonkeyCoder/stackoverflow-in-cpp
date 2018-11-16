@@ -27,7 +27,7 @@ int main() {
 
     char choice;
     while(menuState != MenuState::END) {
-        system("clear");
+        system(CLEAR);
         if (!last_message.empty())
             cout << last_message << endl;
         last_message = "";
@@ -111,7 +111,7 @@ int main() {
             }
         }
     }
-    system("clear");
+    system(CLEAR);
     cout << "GOODBYE" << endl;
     return 0;
 }
