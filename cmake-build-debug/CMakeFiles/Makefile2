@@ -50,54 +50,54 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/spsina/CLionProjects/stackoverflow-in-cpp
+CMAKE_SOURCE_DIR = /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug
+CMAKE_BINARY_DIR = /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug
 
 #=============================================================================
-# Target rules for target CMakeFiles/stackoverflow_in_cpp1.dir
+# Target rules for target CMakeFiles/main.cpp.dir
 
 # All Build rule for target.
-CMakeFiles/stackoverflow_in_cpp1.dir/all:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/depend
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4 "Built target stackoverflow_in_cpp1"
-.PHONY : CMakeFiles/stackoverflow_in_cpp1.dir/all
+CMakeFiles/main.cpp.dir/all:
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/depend
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target main.cpp"
+.PHONY : CMakeFiles/main.cpp.dir/all
 
 # Include target in all.
-all: CMakeFiles/stackoverflow_in_cpp1.dir/all
+all: CMakeFiles/main.cpp.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/stackoverflow_in_cpp1.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/stackoverflow_in_cpp1.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/stackoverflow_in_cpp1.dir/rule
+CMakeFiles/main.cpp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/main.cpp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/main.cpp.dir/rule
 
 # Convenience name for target.
-stackoverflow_in_cpp1: CMakeFiles/stackoverflow_in_cpp1.dir/rule
+main.cpp: CMakeFiles/main.cpp.dir/rule
 
-.PHONY : stackoverflow_in_cpp1
-
-# clean rule for target.
-CMakeFiles/stackoverflow_in_cpp1.dir/clean:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/clean
-.PHONY : CMakeFiles/stackoverflow_in_cpp1.dir/clean
+.PHONY : main.cpp
 
 # clean rule for target.
-clean: CMakeFiles/stackoverflow_in_cpp1.dir/clean
+CMakeFiles/main.cpp.dir/clean:
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/clean
+.PHONY : CMakeFiles/main.cpp.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/main.cpp.dir/clean
 
 .PHONY : clean
 

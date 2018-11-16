@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug"/>
+				<Option working_dir="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug"/>
+				<Option working_dir="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug"/>
+				<Option working_dir="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="stackoverflow_in_cpp1">
-				<Option output="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/stackoverflow_in_cpp1" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug"/>
+			<Target title="main.cpp">
+				<Option output="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/main.cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -54,15 +54,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 stackoverflow_in_cpp1"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.cpp"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="stackoverflow_in_cpp1/fast">
-				<Option output="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/stackoverflow_in_cpp1" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug"/>
+			<Target title="main.cpp/fast">
+				<Option output="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/main.cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -77,29 +77,23 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 stackoverflow_in_cpp1/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.cpp/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/User.cpp">
-			<Option target="stackoverflow_in_cpp1"/>
+		<Unit filename="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/User.cpp">
+			<Option target="main.cpp"/>
 		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/User.h">
-			<Option target="stackoverflow_in_cpp1"/>
+		<Unit filename="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/User.h">
+			<Option target="main.cpp"/>
 		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/Utils.cpp">
-			<Option target="stackoverflow_in_cpp1"/>
+		<Unit filename="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/main.cpp">
+			<Option target="main.cpp"/>
 		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/Utils.h">
-			<Option target="stackoverflow_in_cpp1"/>
-		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/main.cpp">
-			<Option target="stackoverflow_in_cpp1"/>
-		</Unit>
-		<Unit filename="/home/spsina/CLionProjects/stackoverflow-in-cpp/CMakeLists.txt">
+		<Unit filename="/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

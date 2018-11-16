@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/sof.dir/User.cpp.o CMakeFiles/sof.dir/Utils.cpp.o  -o sof 

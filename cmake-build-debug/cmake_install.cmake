@@ -1,4 +1,4 @@
-# Install script for directory: /home/spsina/CLionProjects/stackoverflow-in-cpp
+# Install script for directory: /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

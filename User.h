@@ -5,11 +5,15 @@
 #ifndef STACKOVERFLOW_IN_CPP1_USER_H
 #define STACKOVERFLOW_IN_CPP1_USER_H
 
+#include <iostream>
 #include "AbstractUser.h"
 
 class User : public AbstractUser {
 public:
     User(string username, string password, UserType type);
+
+    static void init(const string &salt);
+
 public:
     void set_password(string password);
     bool check_password(string password);
@@ -19,12 +23,12 @@ public:
     void deleteAccount();
 
 public:
-    static User* login(string username, string password);
-    static void signup(string username, string password);
+    static User& login(string username, string password);
+    static User& signup(string username, string password);
 
 private:
-    const string salt = "E1F53135E559C253";
-    static vector<User*> appDatabase;
+    static string salt;
+    static vector<User> appDatabase;
 
 };
 

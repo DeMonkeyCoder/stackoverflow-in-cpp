@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/spsina/CLionProjects/stackoverflow-in-cpp
+CMAKE_SOURCE_DIR = /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug
+CMAKE_BINARY_DIR = /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-d
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/spsina/Desktop/clion-2018.2.5/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/alideb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named stackoverflow_in_cpp1
+# Target rules for targets named main.cpp
 
 # Build rule for target.
-stackoverflow_in_cpp1: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 stackoverflow_in_cpp1
-.PHONY : stackoverflow_in_cpp1
+main.cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main.cpp
+.PHONY : main.cpp
 
 # fast build rule for target.
-stackoverflow_in_cpp1/fast:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/build
-.PHONY : stackoverflow_in_cpp1/fast
+main.cpp/fast:
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/build
+.PHONY : main.cpp/fast
 
 User.o: User.cpp.o
 
@@ -129,7 +129,7 @@ User.o: User.cpp.o
 
 # target to build an object file
 User.cpp.o:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.o
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/User.cpp.o
 .PHONY : User.cpp.o
 
 User.i: User.cpp.i
@@ -138,7 +138,7 @@ User.i: User.cpp.i
 
 # target to preprocess a source file
 User.cpp.i:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.i
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/User.cpp.i
 .PHONY : User.cpp.i
 
 User.s: User.cpp.s
@@ -147,35 +147,8 @@ User.s: User.cpp.s
 
 # target to generate assembly for a file
 User.cpp.s:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/User.cpp.s
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/User.cpp.s
 .PHONY : User.cpp.s
-
-Utils.o: Utils.cpp.o
-
-.PHONY : Utils.o
-
-# target to build an object file
-Utils.cpp.o:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/Utils.cpp.o
-.PHONY : Utils.cpp.o
-
-Utils.i: Utils.cpp.i
-
-.PHONY : Utils.i
-
-# target to preprocess a source file
-Utils.cpp.i:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/Utils.cpp.i
-.PHONY : Utils.cpp.i
-
-Utils.s: Utils.cpp.s
-
-.PHONY : Utils.s
-
-# target to generate assembly for a file
-Utils.cpp.s:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/Utils.cpp.s
-.PHONY : Utils.cpp.s
 
 main.o: main.cpp.o
 
@@ -183,7 +156,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -192,7 +165,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -201,7 +174,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/stackoverflow_in_cpp1.dir/build.make CMakeFiles/stackoverflow_in_cpp1.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/main.cpp.dir/build.make CMakeFiles/main.cpp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -212,13 +185,10 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... stackoverflow_in_cpp1"
+	@echo "... main.cpp"
 	@echo "... User.o"
 	@echo "... User.i"
 	@echo "... User.s"
-	@echo "... Utils.o"
-	@echo "... Utils.i"
-	@echo "... Utils.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

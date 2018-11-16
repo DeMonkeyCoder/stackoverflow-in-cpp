@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by spsina on 11/8/18.
 //
@@ -7,66 +9,70 @@
 #include "Exceptions.h"
 #include <iostream>
 
-using namespace Exceptions;
 
-vector<User*> User::appDatabase;
+vector<User> User::appDatabase;
+string User::salt;
+
 
 User::User(string username, string password, UserType type){
     lower(username);
     this->username = username;
-    set_password(password);
+    set_password(std::move(password));
     this->type = type;
 }
+
 void User::set_password(string password){
-    long long ps = pass_hash(password);
-    string a;
+    size_t ps = pass_hash(password + salt);
     stringstream out;
     out << ps;
-    a = out.str();
-    this->password = a;
+    this->password = out.str();
 }
+
 bool User::check_password(string password){
-    hash<string> pass_hash_c;
-    long long check = pass_hash(password);
-    string a;
+    size_t check = pass_hash(password + salt);
     stringstream out;
     out << check;
-    a = out.str();
-    return (this->password == a);
+    return (this->password == out.str());
 }
+
 bool User::authenticate(string username, string password){
     lower(username);
     return this->username == username and check_password(password);
 }
 void User::deleteAccount(){
     if (this->type == UserType::ADMIN) {
-        DeleteAdminException ex;
-        throw ex;
+        throw DeleteAdminException();
     }
 
     for (auto user = appDatabase.begin(); user != appDatabase.end();user++){
-        if ( (*user)->username == this->username  ) {
+        if ( user->username == this->username  ) {
             appDatabase.erase(user);
             break;
         }
     }
 }
-User* User::login(string username, string password){
-    for(auto user = appDatabase.begin(); user != appDatabase.end(); user++) {
-        if((*user)->authenticate(username, password)) {
-            return (User*) *user;
+
+User& User::login(string username, string password){
+    for (auto &user : appDatabase) {
+        if(user.authenticate(username, password)) {
+            return user;
         }
     }
-    WrongUsernameOrPasswordException ex;
-    throw ex;
+    throw WrongUsernameOrPasswordException();
 }
-void User::signup(string username, string password){
-    for (auto user = appDatabase.begin(); user != appDatabase.end(); user++) {
-        if ((*user)->username == username) {
-            UserAlreadyExistsException ex;
-            throw ex;
+
+User& User::signup(string username, string password){
+    for (auto &user : appDatabase) {
+        if (user.username == username) {
+            throw UserAlreadyExistsException();
         }
     }
-    //Create user and add it to vector
-    appDatabase.push_back(new User(username, password, UserType::MEMBER));
+    //Create user
+    appDatabase.emplace_back(username, password, UserType::MEMBER);
+    return appDatabase[appDatabase.size() - 1];
+}
+
+void User::init(const string &salt) {
+    User::salt = salt;
+    appDatabase.reserve(20);
 }

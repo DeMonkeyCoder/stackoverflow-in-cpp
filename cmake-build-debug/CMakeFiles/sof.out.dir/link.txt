@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/sof.out.dir/main.cpp.o CMakeFiles/sof.out.dir/User.cpp.o CMakeFiles/sof.out.dir/Utils.cpp.o  -o sof.out 

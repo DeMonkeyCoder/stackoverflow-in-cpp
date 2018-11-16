@@ -3,9 +3,14 @@
 #include "AbstractUser.h"
 #include "Exceptions.h"
 #include "User.h"
-#include "Utils.h"
+
+#ifdef _WIN32
+#define CLEAR "cls"
+#else //In any other OS
+#define CLEAR "clear"
+#endif
+
 using namespace std;
-using namespace Exceptions;
 
 
 enum MenuState {
@@ -15,14 +20,15 @@ enum MenuState {
 };
 
 int main() {
+    User::init("SECRET_KEY");
     User * loggedInUser = nullptr;
     MenuState menuState = MenuState::START;
-    string last_message = "";
+    string last_message;
 
     char choice;
     while(menuState != MenuState::END) {
         system("clear");
-        if (last_message != "")
+        if (!last_message.empty())
             cout << last_message << endl;
         last_message = "";
         switch (menuState) {
@@ -32,19 +38,29 @@ int main() {
                 switch (choice) {
                     case '1': { // login
                         try {
-                            loggedInUser = Utils::loginUser();
+                            string username, password;
+                            cout << "Enter Username: ";
+                            cin >> username;
+                            cout << "Enter Password: ";
+                            cin >> password;
+                            loggedInUser = &User::login(username,password);
                             menuState = MenuState::LOGGED_IN;
-                        } catch (WrongUsernameOrPasswordException e) {
+                        } catch (WrongUsernameOrPasswordException &e) {
                             last_message = e.what();
-                            loggedInUser = nullptr;
                         }
                         break;
                     }
                     case '2': { // signup
                         try {
-                            Utils::signUp();
-                            last_message = "\n\nUser signed up!\n\n";
-                        } catch (UserAlreadyExistsException e) {
+                            string username, password;
+                            cout << "Enter Username: ";
+                            cin >> username;
+                            cout << "Enter Password: ";
+                            cin >> password;
+                            loggedInUser = &User::signup(username, password);
+                            menuState = MenuState::LOGGED_IN;
+                            last_message = "User signed up!\n";
+                        } catch (UserAlreadyExistsException &e) {
                             last_message = e.what();
                         }
                         break;
@@ -54,7 +70,7 @@ int main() {
                         break;
                     }
                     default: { // unknown input
-                        last_message = "\n\nUnknown Input\n\n";
+                        last_message = "Unknown Input\n";
                         break;
                     }
                 }
@@ -67,11 +83,11 @@ int main() {
                     case 'd': {
                         try {
                             loggedInUser->deleteAccount();
-                            cout << "\n\nAccount successfully deleted\n\n";
+                            cout << "Account successfully deleted\n";
                             loggedInUser = nullptr;
                             menuState = MenuState::START;
                         }
-                        catch (DeleteAdminException e) {
+                        catch (DeleteAdminException &e) {
                             last_message = e.what();
                         }
                         break;
@@ -79,16 +95,15 @@ int main() {
                     case 'l': { // logout
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
-                        last_message = "\n\nGOOD BYE\n\n";
+                        last_message = "GOOD BYE\n";
                         break;
                     }
                     case 'e': { // exit
                         menuState = MenuState::END;
-                        last_message = "\n\nGoodbye\n\n";
                         break;
                     }
                     default: { // unknown input
-                        last_message = "\n\nUnknown Input\n\n";
+                        last_message = "Unknown Input\n";
                         break;
                     }
 
@@ -96,5 +111,7 @@ int main() {
             }
         }
     }
+    system("clear");
+    cout << "GOODBYE" << endl;
     return 0;
 }

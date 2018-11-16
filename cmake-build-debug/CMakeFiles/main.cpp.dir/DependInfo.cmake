@@ -4,7 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/spsina/CLionProjects/stackoverflow-in-cpp/main.cpp" "/home/spsina/CLionProjects/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/Tutorial.dir/main.cpp.o"
+  "/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/User.cpp" "/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/main.cpp.dir/User.cpp.o"
+  "/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/main.cpp" "/home/alideb/Desktop/cpptaheri/stackoverflow-in-cpp/cmake-build-debug/CMakeFiles/main.cpp.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
