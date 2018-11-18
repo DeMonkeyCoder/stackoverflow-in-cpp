@@ -14,11 +14,12 @@ vector<User> User::users;
 string User::salt;
 
 
-User::User(string username, string password, UserType type){
+User::User(string username, string password, UserType type, string email){
     lower(username);
     this->username = username;
     set_password(std::move(password));
     this->type = type;
+    this->email = email;
 }
 
 void User::set_password(string password){

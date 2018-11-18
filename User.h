@@ -5,7 +5,7 @@
 
 class User : public AbstractUser {
 public:
-    User(string username, string password, UserType type);
+    User(string username, string password, UserType type, string email);
 
     static void init(const string &salt);
 
