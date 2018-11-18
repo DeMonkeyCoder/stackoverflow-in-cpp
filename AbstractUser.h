@@ -1,9 +1,5 @@
-//
-// Created by spsina on 11/8/18.
-//
+#pragma once
 
-#ifndef STACKOVERFLOW_IN_CPP1_ABSTRACTUSER_H
-#define STACKOVERFLOW_IN_CPP1_ABSTRACTUSER_H
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -25,5 +21,3 @@ protected:
     string password;
     UserType type;
 };
-
-#endif //STACKOVERFLOW_IN_CPP1_ABSTRACTUSER_H
