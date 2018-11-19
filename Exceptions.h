@@ -3,14 +3,25 @@
 #include <exception>
 #include <string>
 
-class UserAlreadyExistsException : public std::exception {
+class UsernameAlreadyExistsException : public std::exception {
 public:
     const char *what() const throw() {
         return message.c_str();
     }
 
 private:
-    const std::string message = "Error: User already exists";
+    const std::string message = "Error: username already exists";
+
+};
+
+class EmailAlreadyExistsException : public std::exception {
+public:
+    const char *what() const throw() {
+        return message.c_str();
+    }
+
+private:
+    const std::string message = "Error: email already exists";
 
 };
 
