@@ -79,5 +79,5 @@ User& User::signup(string username, string password, string email){
 void User::init(const string &salt) {
     User::salt = salt;
     users.reserve(20);
-    users.emplace_back("admin", "admin", UserType::ADMIN);
+    users.emplace_back("admin", "admin", "admin@stackoverflow.com", UserType::ADMIN);
 }
