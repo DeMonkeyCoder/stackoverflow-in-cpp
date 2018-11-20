@@ -14,10 +14,11 @@ vector<User> User::users;
 string User::salt;
 
 
-User::User(string username, string password, UserType type){
+User::User(string username, string password, string email, UserType type){
     lower(username);
     this->username = username;
     set_password(std::move(password));
+    this->email = email;
     this->type = type;
 }
 
@@ -61,19 +62,22 @@ User& User::login(string username, string password){
     throw WrongUsernameOrPasswordException();
 }
 
-User& User::signup(string username, string password){
+User& User::signup(string username, string password, string email){
     for (auto &user : users) {
         if (user.username == username) {
-            throw UserAlreadyExistsException();
+            throw UsernameAlreadyExistsException();
+        }
+        else if (user.email == email) {
+            throw EmailAlreadyExistsException();
         }
     }
     //Create user
-    users.emplace_back(username, password, UserType::MEMBER);
+    users.emplace_back(username, password, email, UserType::MEMBER);
     return users[users.size() - 1];
 }
 
 void User::init(const string &salt) {
     User::salt = salt;
     users.reserve(20);
-    users.emplace_back("admin", "admin", UserType::ADMIN);
+    users.emplace_back("admin", "admin", "admin@stackoverflow.com", UserType::ADMIN);
 }

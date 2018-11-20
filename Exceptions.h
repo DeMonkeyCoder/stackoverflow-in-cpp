@@ -1,21 +1,27 @@
-//
-// Created by spsina on 11/8/18.
-//
-
-#ifndef STACKOVERFLOW_IN_CPP1_EXCEPTIONS_H
-#define STACKOVERFLOW_IN_CPP1_EXCEPTIONS_H
+#pragma once
 
 #include <exception>
 #include <string>
 
-class UserAlreadyExistsException : public std::exception {
+class UsernameAlreadyExistsException : public std::exception {
 public:
     const char *what() const throw() {
         return message.c_str();
     }
 
 private:
-    const std::string message = "Error: User already exists";
+    const std::string message = "Error: username already exists";
+
+};
+
+class EmailAlreadyExistsException : public std::exception {
+public:
+    const char *what() const throw() {
+        return message.c_str();
+    }
+
+private:
+    const std::string message = "Error: email already exists";
 
 };
 
@@ -38,5 +44,3 @@ private:
     const std::string message = "Error: can't delete admin account!";
 
 };
-
-#endif //STACKOVERFLOW_IN_CPP1_EXCEPTIONS_H
