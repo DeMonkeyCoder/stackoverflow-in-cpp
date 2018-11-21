@@ -25,10 +25,12 @@ int main() {
     User * loggedInUser = nullptr;
     MenuState menuState = MenuState::START;
     string last_message;
-
+    bool show_logs = false;
     char choice;
     while(menuState != MenuState::END) {
-        system(CLEAR);
+        if(not show_logs)
+            system(CLEAR);
+        show_logs = false;
         if (not last_message.empty()) {
             cout << last_message << endl;
             last_message = "";
@@ -87,20 +89,33 @@ int main() {
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d.delete account\nl. logout\ne. exit\n";
+                if(loggedInUser->is_admin())
+                    cout << "d. delete account\ns. show logs\nl. logout\ne. exit\n";
+                else
+                    cout << "d. delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch (choice) {
-                    case 'd': {
+                    case 'd': { // delete account
                         try {
                             loggedInUser->deleteAccount();
                             cout << "Account successfully deleted\n";
-                            _Log("User has been deleted: " + loggedInUser->username);
+                            _Log("deleted: " + loggedInUser->username);
                             loggedInUser = nullptr;
                             menuState = MenuState::START;
                         }
                         catch (DeleteAdminException &e) {
                             last_message = e.what();
                         }
+                        break;
+                    }
+                    case 's': { // show logs
+                        if(loggedInUser->is_admin()) {
+                            system(CLEAR);
+                            Logger::getInstance().printLogs();
+                            show_logs = true;
+                        }
+                        else
+                            last_message = "Unknown Input\n";
                         break;
                     }
                     case 'l': { // logout

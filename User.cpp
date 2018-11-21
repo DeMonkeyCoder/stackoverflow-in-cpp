@@ -81,3 +81,7 @@ void User::init(const string &salt) {
     users.reserve(20);
     users.emplace_back("admin", "admin", "admin@stackoverflow.com", UserType::ADMIN);
 }
+
+bool User::is_admin() {
+    return this->type == UserType::ADMIN;
+}
