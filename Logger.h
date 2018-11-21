@@ -11,7 +11,7 @@ public:
     static Logger& getInstance();
 public:
     void printLogs();
-    void log(std::string lg);
+    void log(const std::string& lg);
     std::vector<std::string>& getLogs ();
 private:
     Logger();

@@ -29,9 +29,10 @@ int main() {
     char choice;
     while(menuState != MenuState::END) {
         system(CLEAR);
-        if (!last_message.empty())
+        if (not last_message.empty()) {
             cout << last_message << endl;
-        last_message = "";
+            last_message = "";
+        }
         switch (menuState) {
             case MenuState::START: {
                 cout << "1. login\n2. signup\ne. exit\n";
@@ -44,8 +45,9 @@ int main() {
                             cin >> username;
                             cout << "Enter Password: ";
                             cin >> password;
-                            loggedInUser = &User::login(username,password);
+                            loggedInUser = &User::login(username, password);
                             menuState = MenuState::LOGGED_IN;
+                            _Log("Logged in: " + username);
                         } catch (WrongUsernameOrPasswordException &e) {
                             last_message = e.what();
                         }
@@ -63,6 +65,7 @@ int main() {
                             loggedInUser = &User::signup(username, password, email);
                             menuState = MenuState::LOGGED_IN;
                             last_message = "User signed up!\n";
+                            _Log("Signed up: " + username);
                         } catch (UsernameAlreadyExistsException &e) {
                             last_message = e.what();
                             break;
@@ -91,6 +94,7 @@ int main() {
                         try {
                             loggedInUser->deleteAccount();
                             cout << "Account successfully deleted\n";
+                            _Log("User has been deleted: " + loggedInUser->username);
                             loggedInUser = nullptr;
                             menuState = MenuState::START;
                         }
@@ -100,9 +104,9 @@ int main() {
                         break;
                     }
                     case 'l': { // logout
+                        _Log("Logged out: " + loggedInUser->username);
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
-                        last_message = "GOOD BYE\n";
                         break;
                     }
                     case 'e': { // exit
