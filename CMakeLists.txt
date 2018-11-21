@@ -1,6 +1,13 @@
-# cmake_minimum_required(VERSION <specify CMake version here>)
-project(stackoverflow_in_cpp1)
+cmake_minimum_required(VERSION 3.12)
+project(stackoverflow_in_cpp)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(stackoverflow_in_cpp1 main.cpp)
+include_directories(.)
+
+add_executable(stackoverflow_in_cpp
+    AbstractUser.h
+    Exceptions.h
+    main.cpp
+    User.cpp
+    User.h)
