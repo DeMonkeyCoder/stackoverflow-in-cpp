@@ -3,6 +3,7 @@
 #include "AbstractUser.h"
 #include "Exceptions.h"
 #include "User.h"
+#include "Logger.h"
 
 #ifdef _WIN32
 #define CLEAR "cls"
