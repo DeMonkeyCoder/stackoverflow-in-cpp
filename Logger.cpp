@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "User.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -11,12 +12,12 @@ Logger& Logger::getInstance() {
     return lg;
 }
 
-void Logger::log(const std::string& lg) {
-    std::ofstream file("Log.txt", std::ios::app);
+void Logger::log(User& user) {
+    std::ofstream log_file("log.x.txt", std::ios::app);
     time_t now = time(0);
     std::string date_time(ctime(&now));
-    file << "┌─[" << date_time << "└─[" << lg << std::endl;
-    this->logs.push_back("┌─[" + date_time + "└─[" + lg);
+    log_file << user << " " << date_time;
+    this->logs.push_back(date_time); //TODO: fix it!!
 }
 
 void Logger::printLogs() {

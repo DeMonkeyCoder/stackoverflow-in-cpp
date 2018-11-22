@@ -24,6 +24,9 @@ public:
 public:
     bool is_admin();
 
+public:
+    string toString();
+    friend std::ostream& operator<<(std::ostream& os, User& user);
 private:
     static string salt;
     static vector<User> users;

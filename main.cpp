@@ -49,7 +49,7 @@ int main() {
                             cin >> password;
                             loggedInUser = &User::login(username, password);
                             menuState = MenuState::LOGGED_IN;
-                            _Log("Logged in: " + username);
+                            _Log(*loggedInUser);
                         } catch (WrongUsernameOrPasswordException &e) {
                             last_message = e.what();
                         }
@@ -67,7 +67,6 @@ int main() {
                             loggedInUser = &User::signup(username, password, email);
                             menuState = MenuState::LOGGED_IN;
                             last_message = "User signed up!\n";
-                            _Log("Signed up: " + username);
                         } catch (UsernameAlreadyExistsException &e) {
                             last_message = e.what();
                             break;
@@ -99,7 +98,6 @@ int main() {
                         try {
                             loggedInUser->deleteAccount();
                             cout << "Account successfully deleted\n";
-                            _Log("deleted: " + loggedInUser->username);
                             loggedInUser = nullptr;
                             menuState = MenuState::START;
                         }
@@ -119,7 +117,6 @@ int main() {
                         break;
                     }
                     case 'l': { // logout
-                        _Log("Logged out: " + loggedInUser->username);
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
                         break;

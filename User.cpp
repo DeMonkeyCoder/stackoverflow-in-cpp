@@ -85,3 +85,12 @@ void User::init(const string &salt) {
 bool User::is_admin() {
     return this->type == UserType::ADMIN;
 }
+
+string User::toString() {
+    return email + " " + username;
+}
+
+std::ostream& operator<<(std::ostream &os, User &user) {
+    os << user.toString();
+    return os;
+}

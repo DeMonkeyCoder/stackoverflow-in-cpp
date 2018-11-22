@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include "User.h"
 
 #define _Log(x) Logger::getInstance().log((x))
 
@@ -11,7 +12,7 @@ public:
     static Logger& getInstance();
 public:
     void printLogs();
-    void log(const std::string& lg);
+    void log(User& user);
     std::vector<std::string>& getLogs ();
 private:
     Logger();
