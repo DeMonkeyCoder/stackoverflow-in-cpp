@@ -69,11 +69,7 @@ int main() {
                             loggedInUser = &User::signup(username, password, email);
                             menuState = MenuState::LOGGED_IN;
                             last_message = "User signed up!\n";
-                        } catch (UsernameAlreadyExistsException &e) {
-                            last_message = e.what();
-                            break;
-
-                        } catch (EmailAlreadyExistsException &e) {
+                        } catch (exception &e) {
                             last_message = e.what();
                         }
                         break;

@@ -1,14 +1,20 @@
 #include <utility>
 
-//
-// Created by spsina on 11/8/18.
-//
-
 #include <sstream>
 #include "User.h"
 #include "Exceptions.h"
 #include <iostream>
+#include <regex>
 
+bool is_username_valid(const string& username) {
+    const std::regex pattern("\\w{5,32}");
+    return std::regex_match(username, pattern);
+}
+
+bool is_email_valid(const string& email) {
+    const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+    return std::regex_match(email, pattern);
+}
 
 vector<User> User::users;
 string User::salt;
@@ -71,7 +77,15 @@ User& User::signup(string username, string password, string email){
             throw EmailAlreadyExistsException();
         }
     }
-    //Create user
+    // Check username validatin
+    if(not is_username_valid(username))
+        throw InvalidUsernameException();
+
+    // Check email validatin
+    if(not is_email_valid(email))
+        throw InvalidEmailException();
+
+    // Create user
     users.emplace_back(username, password, email, UserType::MEMBER);
     return users[users.size() - 1];
 }
