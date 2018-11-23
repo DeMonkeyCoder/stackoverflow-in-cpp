@@ -17,4 +17,6 @@ public:
 private:
     Logger();
     std::vector<std::string> logs;
+private:
+    int log_num;
 };
