@@ -87,7 +87,7 @@ bool User::is_admin() {
 }
 
 string User::toString() {
-    return email + " " + username;
+    return email + " | " + username;
 }
 
 std::ostream& operator<<(std::ostream &os, User &user) {

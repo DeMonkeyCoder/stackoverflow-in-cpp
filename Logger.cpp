@@ -16,8 +16,8 @@ void Logger::log(User& user) {
     std::ofstream log_file("log.x.txt", std::ios::app);
     time_t now = time(0);
     std::string date_time(ctime(&now));
-    log_file << user << " " << date_time;
-    this->logs.push_back(date_time); //TODO: fix it!!
+    log_file << user << " | " << date_time;
+    this->logs.push_back(user.toString() + " | " + date_time);
 }
 
 void Logger::printLogs() {
