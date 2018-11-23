@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "AbstractUser.h"
 #include "Exceptions.h"
@@ -13,6 +14,21 @@
 
 using namespace std;
 
+int log_num;
+
+int find_log_num() {
+    ifstream file;
+    int num = 1;
+    while(true) {
+        file.open("log." + to_string(num) + ".txt");
+        if(file.is_open()) {
+            file.close();
+            num++;
+            continue;
+        }
+        return num;
+    }
+}
 
 enum MenuState {
     START,
@@ -21,6 +37,7 @@ enum MenuState {
 };
 
 int main() {
+    log_num = find_log_num();
     User::init("SECRET_KEY");
     User * loggedInUser = nullptr;
     MenuState menuState = MenuState::START;

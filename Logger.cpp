@@ -11,9 +11,10 @@ Logger& Logger::getInstance() {
     static Logger lg;
     return lg;
 }
+extern int log_num;
 
 void Logger::log(User& user) {
-    std::ofstream log_file("log.x.txt", std::ios::app);
+    std::ofstream log_file("log." + std::to_string(log_num) + ".txt", std::ios::app);
     time_t now = time(0);
     std::string date_time(ctime(&now));
     log_file << user << " | " << date_time;
