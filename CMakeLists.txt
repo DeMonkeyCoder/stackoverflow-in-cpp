@@ -8,6 +8,8 @@ include_directories(.)
 add_executable(stackoverflow_in_cpp
         AbstractUser.h
         Exceptions.h
+        Content.h
+        ContentRelation.h
         Logger.cpp
         Logger.h
         main.cpp

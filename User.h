@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "AbstractUser.h"
+#include "Content.h"
 
 class User : public AbstractUser {
 public:
