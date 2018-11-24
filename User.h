@@ -6,7 +6,6 @@
 class User : public AbstractUser {
 public:
     User(string username, string password, string email, UserType type);
-
     static void init(const string &salt);
 
 public:
@@ -27,6 +26,10 @@ public:
 public:
     string toString();
     friend std::ostream& operator<<(std::ostream& os, User& user);
+
+public:
+    vector<Content> contents;
+
 private:
     static string salt;
     static vector<User> users;
