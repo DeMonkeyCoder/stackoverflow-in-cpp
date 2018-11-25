@@ -9,7 +9,9 @@ add_executable(stackoverflow_in_cpp
         AbstractUser.h
         Exceptions.h
         Content.h
+        Content.cpp
         ContentRelation.h
+        ContentRelation.cpp
         Logger.cpp
         Logger.h
         main.cpp

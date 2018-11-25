@@ -12,7 +12,10 @@ enum ContentType {
 class Content {
 public:
     std::string body;
+    std::vector<ContentRelation> relations;
     ContentType type;
     int visits;
-    std::vector<ContentRelation> relations;
+
+public:
+    Content(ContentType &type, std::string &body);
 };

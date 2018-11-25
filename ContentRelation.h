@@ -13,4 +13,7 @@ class ContentRelation {
 public:
     Content* destination;
     ContentRelationType type;
+
+public:
+    ContentRelation(ContentRelationType &type, Content* destination);
 };
