@@ -108,3 +108,7 @@ std::ostream& operator<<(std::ostream &os, User &user) {
     os << user.toString();
     return os;
 }
+
+void User::create(std::string &body, ContentType &type) {
+    contents.emplace_back( body, type);
+}

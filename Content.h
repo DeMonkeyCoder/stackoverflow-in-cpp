@@ -12,10 +12,14 @@ enum ContentType {
 class Content {
 public:
     std::string body;
-    std::vector<ContentRelation> relations;
     ContentType type;
     int visits;
+    std::vector<ContentRelation*> relations;
 
 public:
-    Content(ContentType &type, std::string &body);
+    Content(std::string &body, ContentType &type);
+    ~Content();
+    void add_relation(ContentRelationType &type, Content &destination);
+    void edit_content(std::string &body);
+    void print_answers();
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include<vector>
 
 enum ContentRelationType {
     DUPLICATE_OF,
@@ -11,9 +12,11 @@ class Content;
 
 class ContentRelation {
 public:
-    Content* destination;
-    ContentRelationType type;
+    ContentRelation(Content* destination, Content* source, ContentRelationType type);
+    ~ContentRelation();
 
 public:
-    ContentRelation(ContentRelationType &type, Content* destination);
+    Content* destination;
+    Content* source ;
+    ContentRelationType type;
 };
