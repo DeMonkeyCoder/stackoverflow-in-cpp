@@ -1,13 +1,13 @@
 #include "Content.h"
 
-Content::Content(std::string &body, ContentType &type): visits(0), type(type), body(body) {}
+Content::Content(std::string &body, ContentType type): visits(0), type(type), body(body) {}
 
 Content::~Content() {
     for(int i = 0; i < relations.size(); i++)
         delete relations[0];
 }
 
-void Content::add_relation(ContentRelationType &type, Content &destination) {
+void Content::add_relation(ContentRelationType type, Content &destination) {
     auto relation_ptr = new ContentRelation(&destination, this,  type);
     relations.push_back(relation_ptr);
     destination.relations.push_back(relation_ptr);

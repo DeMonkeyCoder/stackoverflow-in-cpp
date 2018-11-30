@@ -5,6 +5,7 @@
 #include "Exceptions.h"
 #include "User.h"
 #include "Logger.h"
+#include "Content.h"
 
 #ifdef _WIN32
 #define CLEAR "cls"
@@ -18,6 +19,7 @@ using namespace std;
 enum MenuState {
     START,
     LOGGED_IN,
+    QUESTIONS,
     END
 };
 
@@ -87,11 +89,22 @@ int main() {
             }
             case MenuState::LOGGED_IN: {
                 if(loggedInUser->is_admin())
-                    cout << "d. delete account\ns. show logs\nl. logout\ne. exit\n";
-                else
-                    cout << "d. delete account\nl. logout\ne. exit\n";
+                    cout << "s. show logs\n";
+                cout << "a. add question\nq. all questions\nd. delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch (choice) {
+                    case 'a': { // add question
+                        cout << "Enter your question: ";
+                        string question;
+                        cin >> question;
+                        //getline(cin, question);
+                        loggedInUser->create(question, ContentType::QUESTION);
+                        break;
+                    }
+                    case 'q': { // all questions
+                        menuState = MenuState::QUESTIONS;
+                        break;
+                    }
                     case 'd': { // delete account
                         try {
                             loggedInUser->deleteAccount();
@@ -129,6 +142,9 @@ int main() {
                     }
 
                 }
+            }
+            case MenuState::QUESTIONS: {
+                //TODO: questions menu
             }
         }
     }

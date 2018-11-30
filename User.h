@@ -30,7 +30,7 @@ public:
 
 public:
     vector<Content> contents;
-    void create(std::string &body, ContentType &type);
+    void create(std::string &body, ContentType type);
 
 private:
     static string salt;
