@@ -112,3 +112,13 @@ std::ostream& operator<<(std::ostream &os, User &user) {
 void User::create(std::string &body, ContentType type) {
     contents.emplace_back( body, type);
 }
+
+void User::print_questions() {
+    for(const auto &user : users) {
+        for(const auto &content : user.contents) {
+            if(content.type == ContentType::QUESTION) {
+                std::cout << user.username << ": " << content.body << std::endl << std::endl;
+            }
+        }
+    }
+}

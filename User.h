@@ -32,6 +32,9 @@ public:
     vector<Content> contents;
     void create(std::string &body, ContentType type);
 
+public:
+    static void print_questions();
+
 private:
     static string salt;
     static vector<User> users;

@@ -96,8 +96,8 @@ int main() {
                     case 'a': { // add question
                         cout << "Enter your question: ";
                         string question;
-                        cin >> question;
-                        //getline(cin, question);
+                        cin.ignore(1);
+                        getline(cin, question);
                         loggedInUser->create(question, ContentType::QUESTION);
                         break;
                     }
@@ -142,9 +142,12 @@ int main() {
                     }
 
                 }
+                break;
             }
             case MenuState::QUESTIONS: {
-                //TODO: questions menu
+                loggedInUser->print_questions();
+                menuState = MenuState::LOGGED_IN;
+                break;
             }
         }
     }
