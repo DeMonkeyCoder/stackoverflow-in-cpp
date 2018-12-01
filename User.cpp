@@ -127,3 +127,8 @@ void User::print_content(int num) {
     num %= contents.size();
     cout << "Question " << num+1 << ": " << contents[num].body << endl << endl;
 }
+
+void User::edit_content(int num, string &body) {
+    num %= contents.size();
+    contents[num].body = body;
+}

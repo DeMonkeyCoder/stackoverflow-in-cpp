@@ -35,6 +35,7 @@ public:
 public:
     static void print_questions();
     void print_content(int num);
+    void edit_content(int num, string& body);
 
 private:
     static string salt;

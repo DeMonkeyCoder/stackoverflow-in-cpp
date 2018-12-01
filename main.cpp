@@ -148,7 +148,7 @@ int main() {
             }
             case MenuState::QUESTIONS: {
                 loggedInUser->print_content(content_num);
-                cout << "p. previous question\nn. next question\nb. back to main menu\n";
+                cout << "p. previous question\nn. next question\ne. edit question\nb. back to main menu\n";
                 cin >> choice;
                 switch (choice) {
                     case 'p': { // previous question
@@ -157,6 +157,14 @@ int main() {
                     }
                     case 'n': { // next question
                         content_num++;
+                        break;
+                    }
+                    case 'e': { // edit question
+                        cout << "Enter your question: ";
+                        string question;
+                        cin.ignore(1);
+                        getline(cin, question);
+                        loggedInUser->edit_content(content_num, question);
                         break;
                     }
                     case 'b': { // back to main menu
