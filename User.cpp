@@ -110,7 +110,7 @@ std::ostream& operator<<(std::ostream &os, User &user) {
 }
 
 void User::create(std::string &body, ContentType type) {
-    contents.emplace_back( body, type);
+    contents.emplace_back(body, type);
 }
 
 void User::print_questions() {
@@ -125,7 +125,14 @@ void User::print_questions() {
 
 void User::print_content(int num) {
     num %= contents.size();
-    cout << "Question " << num+1 << ": " << contents[num].body << endl << endl;
+    std::cout << "Question " << num+1 << ": " << contents[num].body << std::endl
+              << "_______________________________" << std::endl
+              << "Answers:" << std::endl;
+    for(const auto &relation : contents[num].relations) {
+        if(relation->type == ContentRelationType::ANSWER_TO)
+            std::cout << relation->destination->body << std::endl;
+    }
+    std::cout << "_______________________________" << std::endl;
 }
 
 void User::edit_content(int num, string &body) {
