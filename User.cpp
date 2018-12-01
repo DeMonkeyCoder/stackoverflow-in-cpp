@@ -139,3 +139,10 @@ void User::edit_content(int num, string &body) {
     num %= contents.size();
     contents[num].body = body;
 }
+
+void User::delete_content(int num) {
+    num %= contents.size();
+    auto it = contents.begin();
+    it += num;
+    contents.erase(it);
+}
