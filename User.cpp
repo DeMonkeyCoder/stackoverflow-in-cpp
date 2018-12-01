@@ -1,14 +1,20 @@
 #include <utility>
 
-//
-// Created by spsina on 11/8/18.
-//
-
 #include <sstream>
 #include "User.h"
 #include "Exceptions.h"
 #include <iostream>
+#include <regex>
 
+bool is_username_valid(const string& username) {
+    const std::regex pattern("\\w{5,32}");
+    return std::regex_match(username, pattern);
+}
+
+bool is_email_valid(const string& email) {
+    const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+    return std::regex_match(email, pattern);
+}
 
 vector<User> User::users;
 string User::salt;
@@ -71,7 +77,15 @@ User& User::signup(string username, string password, string email){
             throw EmailAlreadyExistsException();
         }
     }
-    //Create user
+    // Check username validatin
+    if(not is_username_valid(username))
+        throw InvalidUsernameException();
+
+    // Check email validatin
+    if(not is_email_valid(email))
+        throw InvalidEmailException();
+
+    // Create user
     users.emplace_back(username, password, email, UserType::MEMBER);
     return users[users.size() - 1];
 }
@@ -80,4 +94,55 @@ void User::init(const string &salt) {
     User::salt = salt;
     users.reserve(20);
     users.emplace_back("admin", "admin", "admin@stackoverflow.com", UserType::ADMIN);
+}
+
+bool User::is_admin() {
+    return this->type == UserType::ADMIN;
+}
+
+string User::toString() {
+    return email + " | " + username;
+}
+
+std::ostream& operator<<(std::ostream &os, User &user) {
+    os << user.toString();
+    return os;
+}
+
+void User::create(std::string &body, ContentType type) {
+    contents.emplace_back(body, type);
+}
+
+void User::print_questions() {
+    for(const auto &user : users) {
+        for(const auto &content : user.contents) {
+            if(content.type == ContentType::QUESTION) {
+                std::cout << user.username << ": " << content.body << std::endl << std::endl;
+            }
+        }
+    }
+}
+
+void User::print_content(int num) {
+    num %= contents.size();
+    std::cout << "Question " << num+1 << ": " << contents[num].body << std::endl
+              << "_______________________________" << std::endl
+              << "Answers:" << std::endl;
+    for(const auto &relation : contents[num].relations) {
+        if(relation->type == ContentRelationType::ANSWER_TO)
+            std::cout << relation->destination->body << std::endl;
+    }
+    std::cout << "_______________________________" << std::endl;
+}
+
+void User::edit_content(int num, string &body) {
+    num %= contents.size();
+    contents[num].body = body;
+}
+
+void User::delete_content(int num) {
+    num %= contents.size();
+    auto it = contents.begin();
+    it += num;
+    contents.erase(it);
 }

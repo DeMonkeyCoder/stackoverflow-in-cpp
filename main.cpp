@@ -1,8 +1,11 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "AbstractUser.h"
 #include "Exceptions.h"
 #include "User.h"
+#include "Logger.h"
+#include "Content.h"
 
 #ifdef _WIN32
 #define CLEAR "cls"
@@ -16,21 +19,27 @@ using namespace std;
 enum MenuState {
     START,
     LOGGED_IN,
+    QUESTIONS,
     END
 };
 
 int main() {
+    Logger::getInstance();
     User::init("SECRET_KEY");
     User * loggedInUser = nullptr;
     MenuState menuState = MenuState::START;
     string last_message;
-
+    bool show_logs = false;
     char choice;
+    int content_num = 0;
     while(menuState != MenuState::END) {
-        system(CLEAR);
-        if (!last_message.empty())
+        if(not show_logs)
+            system(CLEAR);
+        show_logs = false;
+        if (not last_message.empty()) {
             cout << last_message << endl;
-        last_message = "";
+            last_message = "";
+        }
         switch (menuState) {
             case MenuState::START: {
                 cout << "1. login\n2. signup\ne. exit\n";
@@ -43,8 +52,9 @@ int main() {
                             cin >> username;
                             cout << "Enter Password: ";
                             cin >> password;
-                            loggedInUser = &User::login(username,password);
+                            loggedInUser = &User::login(username, password);
                             menuState = MenuState::LOGGED_IN;
+                            _Log(*loggedInUser);
                         } catch (WrongUsernameOrPasswordException &e) {
                             last_message = e.what();
                         }
@@ -62,11 +72,7 @@ int main() {
                             loggedInUser = &User::signup(username, password, email);
                             menuState = MenuState::LOGGED_IN;
                             last_message = "User signed up!\n";
-                        } catch (UsernameAlreadyExistsException &e) {
-                            last_message = e.what();
-                            break;
-
-                        } catch (EmailAlreadyExistsException &e) {
+                        } catch (exception &e) {
                             last_message = e.what();
                         }
                         break;
@@ -83,10 +89,25 @@ int main() {
                 break;
             }
             case MenuState::LOGGED_IN: {
-                cout << "d.delete account\nl. logout\ne. exit\n";
+                if(loggedInUser->is_admin())
+                    cout << "s. show logs\n";
+                cout << "a. add question\nq. all questions\nd. delete account\nl. logout\ne. exit\n";
                 cin >> choice;
                 switch (choice) {
-                    case 'd': {
+                    case 'a': { // add question
+                        cout << "Enter your question: ";
+                        string question;
+                        cin.ignore(1);
+                        getline(cin, question);
+                        loggedInUser->create(question, ContentType::QUESTION);
+                        break;
+                    }
+                    case 'q': { // all questions
+                        content_num = 0;
+                        menuState = MenuState::QUESTIONS;
+                        break;
+                    }
+                    case 'd': { // delete account
                         try {
                             loggedInUser->deleteAccount();
                             cout << "Account successfully deleted\n";
@@ -98,10 +119,19 @@ int main() {
                         }
                         break;
                     }
+                    case 's': { // show logs
+                        if(loggedInUser->is_admin()) {
+                            system(CLEAR);
+                            Logger::getInstance().printLogs();
+                            show_logs = true;
+                        }
+                        else
+                            last_message = "Unknown Input\n";
+                        break;
+                    }
                     case 'l': { // logout
                         loggedInUser = nullptr;
                         menuState = MenuState::START;
-                        last_message = "GOOD BYE\n";
                         break;
                     }
                     case 'e': { // exit
@@ -114,6 +144,43 @@ int main() {
                     }
 
                 }
+                break;
+            }
+            case MenuState::QUESTIONS: {
+                loggedInUser->print_content(content_num);
+                cout << "p. previous question\nn. next question\ne. edit question\nd. delete question\nb. back to main menu\n";
+                cin >> choice;
+                switch (choice) {
+                    case 'p': { // previous question
+                        content_num--;
+                        break;
+                    }
+                    case 'n': { // next question
+                        content_num++;
+                        break;
+                    }
+                    case 'e': { // edit question
+                        cout << "Enter your question: ";
+                        string question;
+                        cin.ignore(1);
+                        getline(cin, question);
+                        loggedInUser->edit_content(content_num, question);
+                        break;
+                    }
+                    case 'd': { // delete question
+                        loggedInUser->delete_content(content_num);
+                        break;
+                    }
+                    case 'b': { // back to main menu
+                        menuState = MenuState::LOGGED_IN;
+                        break;
+                    }
+                    default: { // unknown input
+                        last_message = "Unknown Input\n";
+                        break;
+                    }
+                }
+                break;
             }
         }
     }
