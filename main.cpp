@@ -31,6 +31,7 @@ int main() {
     string last_message;
     bool show_logs = false;
     char choice;
+    int content_num = 0;
     while(menuState != MenuState::END) {
         if(not show_logs)
             system(CLEAR);
@@ -102,6 +103,7 @@ int main() {
                         break;
                     }
                     case 'q': { // all questions
+                        content_num = 0;
                         menuState = MenuState::QUESTIONS;
                         break;
                     }
@@ -145,8 +147,27 @@ int main() {
                 break;
             }
             case MenuState::QUESTIONS: {
-                loggedInUser->print_questions();
-                menuState = MenuState::LOGGED_IN;
+                loggedInUser->print_content(content_num);
+                cout << "p. previous question\nn. next question\nb. back to main menu\n";
+                cin >> choice;
+                switch (choice) {
+                    case 'p': { // previous question
+                        content_num--;
+                        break;
+                    }
+                    case 'n': { // next question
+                        content_num++;
+                        break;
+                    }
+                    case 'b': { // back to main menu
+                        menuState = MenuState::LOGGED_IN;
+                        break;
+                    }
+                    default: { // unknown input
+                        last_message = "Unknown Input\n";
+                        break;
+                    }
+                }
                 break;
             }
         }

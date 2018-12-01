@@ -122,3 +122,8 @@ void User::print_questions() {
         }
     }
 }
+
+void User::print_content(int num) {
+    num %= contents.size();
+    cout << "Question " << num+1 << ": " << contents[num].body << endl << endl;
+}
