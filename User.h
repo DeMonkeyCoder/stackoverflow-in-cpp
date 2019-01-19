@@ -4,11 +4,15 @@
 #include <string>
 #include <map>
 #include "AbstractUser.h"
+#include "Logger.h"
 
 string currentDateTime();
 
 class User : public AbstractUser {
 public:
+	//Logger related
+	static Logger log;
+
 	// Login related
 	User(string username, string password, string email, UserType type);
 	static void init(const string &salt);
@@ -40,6 +44,8 @@ public:
 	void deleteAnswer(string questionTitle, string questionAuthor, string answerAuthor);
 	void upvoteAnswer(string questionTitle, string questionAuthor, string answerAuthor);
 	void downvoteAnswer(string questionTitle, string questionAuthor, string answerAuthor);
+
+
 
 protected:
 	// Question related

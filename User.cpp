@@ -25,6 +25,7 @@ string currentDateTime() {
 
 vector<User> User::users;
 string User::salt;
+Logger User::log = *Logger::getInstance();
 
 User::User(string username, string password, string email, UserType type) {
 	lower(username);
@@ -77,8 +78,10 @@ void User::deleteAccount() {
 }
 
 User& User::login(string username, string password) {
+	log.inc();
 	for (auto &user : users) {
 		if (user.authenticate(username, password)) {
+			log << user.email << user.username << currentDateTime() ;
 			return user;
 		}
 	}
@@ -721,3 +724,4 @@ void User::downvoteAnswer(string questionTitle, string questionAuthor, string an
 		}
 	}
 }
+
