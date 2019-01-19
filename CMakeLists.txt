@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.8)
 project(stackoverflow_in_cpp)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -10,4 +10,4 @@ add_executable(stackoverflow_in_cpp
     Exceptions.h
     main.cpp
     User.cpp
-    User.h)
+    User.h Logger.cpp Logger.h)
