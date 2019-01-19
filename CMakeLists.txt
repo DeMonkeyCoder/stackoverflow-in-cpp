@@ -10,4 +10,4 @@ add_executable(stackoverflow_in_cpp
     Exceptions.h
     main.cpp
     User.cpp
-    User.h)
+    User.h logger.cpp logger.h)
